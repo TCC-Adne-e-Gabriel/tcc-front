@@ -1,11 +1,11 @@
-import {DocumentHeadTags,documentGetInitialProps} from '@mui/material-nextjs/v15-pagesRouter';
-import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/document";
+import { documentGetInitialProps } from '@mui/material-nextjs/v15-pagesRouter';
+import { Html, Head, Main, NextScript } from "next/document";
 
    export default function MyDocument(props) {
      return (
        <Html lang="en">
          <Head>
-            <DocumentHeadTags {...props} />
+          <link rel="icon" href="../app/favicon.ico" />
          </Head>
          <body>
            <Main />
