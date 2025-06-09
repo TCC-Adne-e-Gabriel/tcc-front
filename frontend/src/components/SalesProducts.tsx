@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Box, Button, Container, Grid2, Card, CardMedia, CardContent } from "@mui/material";
+import { Typography, Box, Button, Grid2, Card, CardMedia, CardContent } from "@mui/material";
 
 const categories = ["Hardware", "Jogos", "Celulares", "Tablets e Ipads"];
 const sales = [
@@ -23,7 +23,7 @@ const SalesProducts = () => {
           <Typography variant="h5" sx={{ mb: 2 }}>Promoções</Typography>
           <Grid2 container spacing={2}>
             {sales.map((product, index) => (
-                <Card>
+                <Card key={index}>
                   <CardMedia component="img" image={product.image} height="140" alt={product.name} />
                   <CardContent>
                     <Typography variant="h6">{product.name}</Typography>

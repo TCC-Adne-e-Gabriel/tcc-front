@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Box, IconButton, TextField, Container, InputAdornment, Link } from "@mui/material";
+import { Typography, Box, Container } from "@mui/material";
 import SalesProducts from '../components/SalesProducts';
 
 const HomePage = () => {

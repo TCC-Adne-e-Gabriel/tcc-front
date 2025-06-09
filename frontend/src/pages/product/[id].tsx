@@ -10,6 +10,7 @@ import {
   InputAdornment,
   Button,
 } from '@mui/material';
+import { Product } from '@/types/product';
 import { Favorite, Add, Remove } from '@mui/icons-material';
 
 const ProductCard: React.FC<Product> = ({
@@ -24,6 +25,7 @@ const ProductCard: React.FC<Product> = ({
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(colors[0]);
   const [selectedSize, setSelectedSize] = useState(sizes[0]);
+  console.log(id, selectedColor);
 
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuantity(parseInt(event.target.value) || 1);
