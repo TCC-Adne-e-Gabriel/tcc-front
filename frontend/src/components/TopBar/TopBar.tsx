@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Box, TextField, IconButton } from '@mui/material';
 import { Search, ShoppingCart } from '@mui/icons-material';
+import CategoryMenu from './CategoryMenu';
 
 const TopBar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -8,6 +9,7 @@ const TopBar: React.FC = () => {
   return (
     <AppBar position="sticky" sx={{ bgcolor: '#804188' }}>
       <Toolbar>
+        <CategoryMenu />
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
           
         </Box>
