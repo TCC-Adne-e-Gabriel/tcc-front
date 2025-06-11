@@ -1,16 +1,14 @@
 import { api } from './api';
 import { User, LoginData, RegisterData } from '../types';
 
-export const login = async (data: LoginData): Promise<User> => {
+export const login = async (data: LoginData): Promise<{ user: User; token: string }> => {
   const response = await api.post('/auth/login', data);
-  localStorage.setItem('token', response.data.token);
-  return response.data.user;
+  return response.data;
 };
 
-export const register = async (data: RegisterData): Promise<User> => {
+export const register = async (data: RegisterData): Promise<{ user: User; token: string }> => {
   const response = await api.post('/auth/register', data);
-  localStorage.setItem('token', response.data.token);
-  return response.data.user;
+  return response.data;
 };
 
 export const getCurrentUser = async (): Promise<User | null> => {
@@ -20,4 +18,8 @@ export const getCurrentUser = async (): Promise<User | null> => {
   } catch (error) {
     return null;
   }
+};
+
+export const logout = () => {
+  localStorage.removeItem('token');
 };
