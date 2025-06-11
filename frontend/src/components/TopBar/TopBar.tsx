@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Box, TextField, IconButton } from '@mui/material';
 import { Search, ShoppingCart } from '@mui/icons-material';
-import CategoryMenu from './CategoryMenu';
+import CategoryMenu from './CategoryMenu.tsx';
+import UserMenu from './UserMenu.tsx';
 
 const TopBar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -32,6 +33,7 @@ const TopBar: React.FC = () => {
           <IconButton sx={{ color: '#ffffff', ml: 2 }}>
             <ShoppingCart />
           </IconButton>
+          <UserMenu />
         </Box>
       </Toolbar>
     </AppBar>
