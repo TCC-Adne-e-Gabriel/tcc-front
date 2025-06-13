@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Box, TextField, IconButton } from '@mui/material';
 import { Search, ShoppingCart } from '@mui/icons-material';
-import CategoryMenu from './CategoryMenu.tsx';
-import UserMenu from './UserMenu.tsx';
+import CategoryMenu from './CategoryMenu';
+import UserMenu from './UserMenu';
+import { useNavigate } from 'react-router-dom';
+
 
 const TopBar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   return (
     <AppBar position="sticky" sx={{ bgcolor: '#804188' }}>
@@ -30,7 +33,7 @@ const TopBar: React.FC = () => {
               }
             }}
           />
-          <IconButton sx={{ color: '#ffffff', ml: 2 }}>
+          <IconButton sx={{ color: '#ffffff', ml: 2 }} onClick={() => navigate('/cart')}>
             <ShoppingCart />
           </IconButton>
           <UserMenu />

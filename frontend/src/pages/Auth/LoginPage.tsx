@@ -11,7 +11,6 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     try {
       await login({ email, password });
-      // Redirect to home or previous page
     } catch (error) {
       console.error('Login failed:', error);
     }
