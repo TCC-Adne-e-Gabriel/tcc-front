@@ -1,7 +1,16 @@
 import React from 'react';
-import { Box, Typography, Container, Button, Grid } from '@mui/material';
+import { 
+  Box, 
+  Typography, 
+  Container, 
+  Button, 
+  Grid,
+  useTheme
+} from '@mui/material';
 
 const HomePage: React.FC = () => {
+  const theme = useTheme();
+
   return (
     <Box>
       <Box
@@ -15,7 +24,7 @@ const HomePage: React.FC = () => {
           justifyContent: 'center',
           alignItems: 'center',
           textAlign: 'center',
-          color: '#ffffff',
+          color: theme.palette.text.secondary,
           position: 'relative',
           '&::before': {
             content: '""',
@@ -55,11 +64,13 @@ const HomePage: React.FC = () => {
           href="/products"
           sx={{ 
             zIndex: 1, 
-            bgcolor: '#804188',
-            '&:hover': { bgcolor: '#6a3570' },
-            fontSize: '1.1rem',
             py: 1.5,
-            px: 4
+            px: 4,
+            fontSize: '1.1rem',
+            backgroundColor: theme.palette.primary.main,
+            '&:hover': { 
+              backgroundColor: theme.palette.primary.dark 
+            }
           }}
         >
           Shop Now
@@ -94,12 +105,12 @@ const HomePage: React.FC = () => {
                 textAlign: 'center',
                 p: 3,
                 height: '100%',
-                border: '1px solid #e0e0e0',
+                border: `1px solid ${theme.palette.divider}`,
                 borderRadius: 2,
                 transition: 'transform 0.3s, box-shadow 0.3s',
                 '&:hover': {
                   transform: 'translateY(-5px)',
-                  boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+                  boxShadow: theme.shadows[4]
                 }
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
@@ -113,54 +124,6 @@ const HomePage: React.FC = () => {
           ))}
         </Grid>
       </Container>
-
-      <Box sx={{ bgcolor: '#f5f5f5', py: 8 }}>
-        <Container maxWidth="lg">
-          <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', mb: 6 }}>
-            Featured Products
-          </Typography>
-          <Grid container spacing={4} justifyContent="center">
-            {[1, 2, 3].map((item) => (
-              <Grid item key={item} xs={12} sm={6} md={4}>
-                <Box sx={{ 
-                  bgcolor: '#ffffff', 
-                  borderRadius: 2, 
-                  overflow: 'hidden',
-                  boxShadow: 3,
-                  transition: 'transform 0.3s',
-                  '&:hover': {
-                    transform: 'scale(1.03)'
-                  }
-                }}>
-                  <Box sx={{ 
-                    height: 200, 
-                    backgroundImage: `url(https://source.unsplash.com/random/400x300/?gaming,${item})`,
-                    backgroundSize: 'cover'
-                  }} />
-                  <Box sx={{ p: 3 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                      Gaming Product {item}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
-                      Premium gaming gear with advanced features
-                    </Typography>
-                    <Button 
-                      variant="contained" 
-                      href="/products"
-                      sx={{ 
-                        bgcolor: '#804188',
-                        '&:hover': { bgcolor: '#6a3570' }
-                      }}
-                    >
-                      View Details
-                    </Button>
-                  </Box>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
     </Box>
   );
 };

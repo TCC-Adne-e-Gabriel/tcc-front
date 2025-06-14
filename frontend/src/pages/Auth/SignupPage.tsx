@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Container, Paper } from '@mui/material';
+import { TextField, Button, Typography, Container, Paper } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { useAuth } from '../../contexts/AuthContext';
 
 const SignupPage: React.FC = () => {
@@ -7,6 +8,7 @@ const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { register } = useAuth();
+  const theme = useTheme();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +56,14 @@ const SignupPage: React.FC = () => {
             type="submit"
             variant="contained"
             fullWidth
-            sx={{ mt: 3, bgcolor: '#804188', '&:hover': { bgcolor: '#6a3570' } }}
+            sx={{ 
+              mt: 3,
+              py: 1.5,
+              backgroundColor: theme.palette.primary.main,
+              '&:hover': {
+                backgroundColor: theme.palette.primary.dark
+              }
+            }}
           >
             Sign Up
           </Button>

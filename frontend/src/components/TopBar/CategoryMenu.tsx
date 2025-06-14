@@ -1,10 +1,13 @@
 import React from 'react';
-import { Box, Button, Menu, MenuItem, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { Category } from '../../types';
 
 const categories: Category[] = ['HARDWARE', 'GAMES', 'SMARTPHONES', 'FURNITURE', 'SALE'];
 
 const CategoryMenu: React.FC = () => {
+  const theme = useTheme();
+
   return (
     <Box sx={{ display: 'flex', gap: 1 }}>
       {categories.map((category) => (
@@ -12,11 +15,11 @@ const CategoryMenu: React.FC = () => {
           key={category}
           href={`/products/${category.toLowerCase()}`}
           sx={{ 
-            color: '#ffffff',
+            color: theme.palette.text.secondary,
             textTransform: 'none',
             fontWeight: 'bold',
             '&:hover': {
-              backgroundColor: '#6a3570'
+              backgroundColor: theme.palette.primary.dark
             }
           }}
         >
