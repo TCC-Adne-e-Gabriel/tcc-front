@@ -5,6 +5,7 @@ import {
   Button, 
   useTheme
 } from '@mui/material';
+import bgImage from '../../assets/images/home.jpg';
 
 const HomePage: React.FC = () => {
   const theme = useTheme();
@@ -14,7 +15,14 @@ const HomePage: React.FC = () => {
       <Box
         sx={{
           height: '100vh',
-          backgroundImage: 'url(https://source.unsplash.com/random/1920x1080/?gaming)',
+          backgroundImage: `
+            linear-gradient(
+              to bottom,
+              rgba(128, 65, 136, 0.4) 50%,
+              rgba(128, 65, 136, 0) 100%
+            ),
+            url(${bgImage})
+          `,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           display: 'flex',

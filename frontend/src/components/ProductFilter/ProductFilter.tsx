@@ -5,7 +5,7 @@ import {
   Slider, 
   Checkbox, 
   FormControlLabel, 
-  FormGroup, 
+  FormGroup,
   Collapse,
   IconButton
 } from '@mui/material';
@@ -28,14 +28,12 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
   const [brands, setBrands] = useState<string[]>([]);
   const [openBrands, setOpenBrands] = useState(true);
   
-  // Extract unique brands
   useEffect(() => {
     const uniqueBrands = Array.from(new Set(products.map(p => p.brand)));
     setBrands(uniqueBrands);
     setSelectedBrands([]);
   }, [products]);
 
-  // Extract max price
   useEffect(() => {
     if (products.length > 0) {
       const maxPrice = Math.max(...products.map(p => p.price));
@@ -43,7 +41,6 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
     }
   }, [products]);
 
-  // Apply filters
   useEffect(() => {
     const filtered = products.filter(product => 
       product.price >= priceRange[0] && 

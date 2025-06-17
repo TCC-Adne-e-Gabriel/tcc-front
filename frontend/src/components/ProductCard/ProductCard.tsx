@@ -59,7 +59,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-            ${product.price.toFixed(2)}
+            R${product.price.toFixed(2)}
           </Typography>
           {product.category === 'SALE' && (
             <Chip 

@@ -51,6 +51,7 @@ const TopBar: React.FC = () => {
               sx={{ 
                 height: { xs: 30, sm: 40 }, 
                 maxWidth: '100%',
+                minWidth: '10rem',
                 objectFit: 'contain'
               }}
             />

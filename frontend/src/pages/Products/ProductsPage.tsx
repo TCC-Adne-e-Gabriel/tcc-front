@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid, Box, Container, Typography, CircularProgress } from '@mui/material';
+import { Box, Container, Typography, CircularProgress } from '@mui/material';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import ProductFilter from '../../components/ProductFilter/ProductFilter';
 import { Product, Category } from '../../types';

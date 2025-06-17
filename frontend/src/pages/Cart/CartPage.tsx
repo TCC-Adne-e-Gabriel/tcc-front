@@ -94,7 +94,7 @@ const CartPage: React.FC = () => {
                 <ListItemAvatar>
                   <Avatar 
                     variant="rounded"
-                    src={item.product.imageUrl || `https://source.unsplash.com/random/80x80/?gaming,${item.product.id}`}
+                    src={item.product.imageUrl}
                     alt={item.product.name}
                     sx={{ width: 80, height: 80, mr: 2 }}
                   />
@@ -112,7 +112,7 @@ const CartPage: React.FC = () => {
                         {item.product.brand}
                       </Typography>
                       <Typography variant="body1" sx={{ fontWeight: 'bold', mt: 1 }}>
-                        ${item.product.price.toFixed(2)}
+                        R${item.product.price.toFixed(2)}
                       </Typography>
                     </>
                   }
@@ -164,7 +164,7 @@ const CartPage: React.FC = () => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
           <Typography variant="body1">Subtotal:</Typography>
           <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-            ${subtotal.toFixed(2)}
+            R${subtotal.toFixed(2)}
           </Typography>
         </Box>
         
@@ -173,7 +173,7 @@ const CartPage: React.FC = () => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
           <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Total:</Typography>
           <Typography variant="h6" sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
-            ${subtotal.toFixed(2)}
+            R${subtotal.toFixed(2)}
           </Typography>
         </Box>
         
