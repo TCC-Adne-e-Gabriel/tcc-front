@@ -6,12 +6,14 @@ import {
   TextField, 
   IconButton,
   InputAdornment,
-  useTheme
+  Link
 } from '@mui/material';
 import { Search, ShoppingCart } from '@mui/icons-material';
 import CategoryMenu from './CategoryMenu';
 import UserMenu from './UserMenu';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import logo from '../../assets/images/logo_abbr.png';
 
 const TopBar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -30,7 +32,29 @@ const TopBar: React.FC = () => {
       <Toolbar>
         <CategoryMenu />
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
-
+          <Link 
+            href="/" 
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/');
+            }}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none'
+            }}
+          >
+            <Box
+              component="img"
+              src={logo}
+              alt="MORE OF THIS"
+              sx={{ 
+                height: { xs: 30, sm: 40 }, 
+                maxWidth: '100%',
+                objectFit: 'contain'
+              }}
+            />
+          </Link>
         </Box>
         
         <Box 

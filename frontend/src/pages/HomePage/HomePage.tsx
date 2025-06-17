@@ -2,9 +2,7 @@ import React from 'react';
 import { 
   Box, 
   Typography, 
-  Container, 
   Button, 
-  Grid,
   useTheme
 } from '@mui/material';
 
@@ -76,54 +74,6 @@ const HomePage: React.FC = () => {
           Shop Now
         </Button>
       </Box>
-
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', mb: 6 }}>
-          Why Choose Us?
-        </Typography>
-        <Grid container spacing={4}>
-          {[
-            { 
-              title: 'Premium Selection', 
-              description: 'Curated collection of top-tier gaming products from trusted brands' 
-            },
-            { 
-              title: 'Competitive Prices', 
-              description: 'Best deals and regular discounts for our loyal customers' 
-            },
-            { 
-              title: 'Fast Delivery', 
-              description: 'Quick shipping with real-time tracking for all orders' 
-            },
-            { 
-              title: 'Expert Support', 
-              description: '24/7 customer service from gaming enthusiasts' 
-            },
-          ].map((feature, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-              <Box sx={{ 
-                textAlign: 'center',
-                p: 3,
-                height: '100%',
-                border: `1px solid ${theme.palette.divider}`,
-                borderRadius: 2,
-                transition: 'transform 0.3s, box-shadow 0.3s',
-                '&:hover': {
-                  transform: 'translateY(-5px)',
-                  boxShadow: theme.shadows[4]
-                }
-              }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-                  {feature.title}
-                </Typography>
-                <Typography variant="body1">
-                  {feature.description}
-                </Typography>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
     </Box>
   );
 };
