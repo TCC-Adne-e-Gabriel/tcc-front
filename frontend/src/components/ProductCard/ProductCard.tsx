@@ -8,7 +8,7 @@ import {
   CardActions,
   Box,
   Chip,
-  useTheme  // Add this import
+  useTheme,
 } from '@mui/material';
 import { useCart } from '../../contexts/CartContext';
 import { Product } from '../../types';
@@ -19,13 +19,14 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
-  const theme = useTheme();  // Get theme object
+  const theme = useTheme();
 
   const handleAddToCart = async () => {
     try {
       await addToCart({
         product,
-        quantity: 1
+        quantity: 1,
+        price: product.price,
       });
     } catch (error) {
       console.error('Failed to add to cart', error);

@@ -22,6 +22,7 @@ export interface CartItem {
   id: string;
   product: Product;
   quantity: number;
+  price: number;
 }
 
 export interface LoginData {
@@ -34,11 +35,14 @@ export interface RegisterData extends LoginData {
   confirmPassword: string;
 }
 
+export type OrderStatus = 'PENDING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+
 export interface Order {
   id: string;
   userId: string;
   items: CartItem[];
   total: number;
-  status: 'PENDING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+  status: OrderStatus;
   createdAt: string;
+  updatedAt: string;
 }
