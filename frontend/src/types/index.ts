@@ -1,11 +1,28 @@
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  category: Category;
+  description: string;
+  imageUrl?: string;
+  brand: string;
+  specs: Record<string, string>;
+}
+
 export type Category = 'HARDWARE' | 'GAMES' | 'SMARTPHONES' | 'FURNITURE' | 'SALE';
 
 export interface User {
   id: string;
   name: string;
   email: string;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt: string;
+}
+
+export interface CartItem {
+  id: string;
+  product: Product;
+  quantity: number;
+  price: number;
 }
 
 export interface LoginData {
@@ -13,8 +30,19 @@ export interface LoginData {
   password: string;
 }
 
-export interface RegisterData {
+export interface RegisterData extends LoginData {
   name: string;
-  email: string;
-  password: string;
+  confirmPassword: string;
+}
+
+export type OrderStatus = 'PENDING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+
+export interface Order {
+  id: string;
+  userId: string;
+  items: CartItem[];
+  total: number;
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
 }

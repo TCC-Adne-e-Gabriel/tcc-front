@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { getCurrentUser, login as apiLogin, register as apiRegister } from '../services/authService';
-import { User } from '../types';
+import { User, RegisterData, LoginData } from '../types';
 
 interface AuthContextType {
   user: User | null;
-  login: (data: { email: string; password: string }) => Promise<void>;
-  register: (data: { name: string; email: string; password: string }) => Promise<void>;
+  login: (data: LoginData) => Promise<void>;
+  register: (data: RegisterData) => Promise<void>;
   logout: () => void;
 }
 
@@ -30,13 +30,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     fetchUser();
   }, []);
 
-  const login = async (data: { email: string; password: string }) => {
+  const login = async (data: LoginData) => {
     const { user, token } = await apiLogin(data);
     localStorage.setItem('token', token);
     setUser(user);
   };
 
-  const register = async (data: { name: string; email: string; password: string }) => {
+  const register = async (data: RegisterData) => {
     const { user, token } = await apiRegister(data);
     localStorage.setItem('token', token);
     setUser(user);

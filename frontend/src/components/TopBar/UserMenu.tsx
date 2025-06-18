@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IconButton, Menu, MenuItem, Avatar, Typography, Box } from '@mui/material';
+import { IconButton, Menu, MenuItem, Avatar } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
 
 const UserMenu: React.FC = () => {
@@ -57,16 +57,10 @@ const UserMenu: React.FC = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {user ? (
+        {!!!user ? (
           [
-            <MenuItem key="profile">
-              <Avatar /> Profile
-            </MenuItem>,
-            <MenuItem key="orders">
+            <MenuItem key="orders" onClick={() => (window.location.href = '/orders')}>
               <Avatar /> Orders
-            </MenuItem>,
-            <MenuItem key="favorites">
-              <Avatar /> Favorites
             </MenuItem>,
             <MenuItem key="logout" onClick={handleLogout}>
               <Avatar /> Logout
