@@ -54,7 +54,7 @@ jobs:
         run: npm run build
         working-directory: frontend
         env:
-          REACT_APP_API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          PROJECT_API_BASE_URL: ${{ secrets.API_BASE_URL }}
           
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
