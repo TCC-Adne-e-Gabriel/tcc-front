@@ -9,7 +9,7 @@ on:
 
 jobs:
   sonarcloud:
-    name: SecurityAudit
+    name: SonarCloud
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
