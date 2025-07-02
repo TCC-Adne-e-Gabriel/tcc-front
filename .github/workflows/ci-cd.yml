@@ -8,20 +8,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-image:
+  build-and-push:
     runs-on: ubuntu-latest
     outputs:
-      image-tag: ${{ steps.build.outputs.tag }}
+      image-remote: ${{ steps.push.outputs.remote }}
     steps:
-      - name: Check Out Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Build Image
-        id: build
+      - id: build
         run: |
-          IMAGE_TAG="ci-image:${{ github.sha }}"
+          IMAGE_TAG=ci-image:${{ github.sha }}
           docker build -t $IMAGE_TAG .
-          echo "tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "local=$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - id: push
+        run: |
+          REMOTE=${{ secrets.DOCKERHUB_USERNAME }}/ci-image:${{ github.sha }}
+          docker tag ${{ steps.build.outputs.local }} $REMOTE
+          docker push $REMOTE
+          echo "remote=$REMOTE" >> $GITHUB_OUTPUT
 
   sonarcloud:
     needs: build-image
@@ -29,32 +39,23 @@ jobs:
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     steps:
-      - name: SonarCloud Scan
-        run: |
-          docker run --rm ${{ needs.build-image.outputs.image-tag }} \
-            sonar-scanner -Dsonar.login=$SONAR_TOKEN
+      - run: docker pull ${{ needs.build-image.outputs.image-remote }}
+      - run: docker run --rm ${{ needs.build-image.outputs.image-remote }} sonar-scanner -Dsonar.login=$SONAR_TOKEN
 
   npm-audit:
     needs: build-image
     runs-on: ubuntu-latest
     steps:
-      - name: NPM audit
-        run: |
-          docker run --rm ${{ needs.build-image.outputs.image-tag }} \
-            npm audit --audit-level=moderate
+      - run: docker pull ${{ needs.build-image.outputs.image-remote }}
+      - run: docker run --rm ${{ needs.build-image.outputs.image-remote }} npm audit --audit-level=moderate
 
   deploy-vercel:
     needs: build-image
     runs-on: ubuntu-latest
     env:
-      VERCEL_TOKEN:      ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID:     ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
-      - name: Vercel deploy
-        run: |
-          docker run --rm ${{ needs.build-image.outputs.image-tag }} \
-            npx vercel --token $VERCEL_TOKEN \
-                       --org-id $VERCEL_ORG_ID \
-                       --project-id $VERCEL_PROJECT_ID \
-                       --prod
+      - run: docker pull ${{ needs.build-image.outputs.image-remote }}
+      - run: docker run --rm ${{ needs.build-image.outputs.image-remote }} npx vercel --token $VERCEL_TOKEN --org-id $VERCEL_ORG_ID --project-id $VERCEL_PROJECT_ID --prod
