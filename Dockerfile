@@ -7,6 +7,8 @@ RUN npm ci
 
 COPY frontend/. ./
 
+COPY sonar-project.properties ./
+
 FROM base AS dev
 
 EXPOSE 3000
