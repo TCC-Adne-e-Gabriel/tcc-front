@@ -14,6 +14,8 @@ jobs:
       image-remote: ${{ steps.push.outputs.remote }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - id: build
         run: |
@@ -45,7 +47,9 @@ jobs:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - name: SonarCloud Scan
-        run: sonar-scanner -Dsonar.login=$SONAR_TOKEN
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: NPM Audit
         run: npm audit --audit-level=moderate
