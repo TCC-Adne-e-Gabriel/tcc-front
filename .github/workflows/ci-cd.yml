@@ -17,7 +17,7 @@ jobs:
 
       - id: build
         run: |
-          IMAGE_TAG=ci-image:${{ github.sha }}
+          IMAGE_TAG=tcc-front:${{ github.sha }}
           docker build --target ci -t $IMAGE_TAG .
           echo "local=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
@@ -28,7 +28,7 @@ jobs:
 
       - id: push
         run: |
-          REMOTE=${{ secrets.DOCKERHUB_USERNAME }}/ci-image:${{ github.sha }}
+          REMOTE=${{ secrets.DOCKERHUB_USERNAME }}/tcc-front:${{ github.sha }}
           docker tag ${{ steps.build.outputs.local }} $REMOTE
           docker push $REMOTE
           echo "remote=$REMOTE" >> $GITHUB_OUTPUT
