@@ -33,29 +33,25 @@ jobs:
           docker push $REMOTE
           echo "remote=$REMOTE" >> $GITHUB_OUTPUT
 
-  sonarcloud:
-    needs: build-image
+  check-and-deploy:
+    name: Analyze, Audit & Deploy
+    needs: build-and-push
     runs-on: ubuntu-latest
+    container: ${{ needs.build-and-push.outputs.image }}
     env:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    steps:
-      - run: docker pull ${{ needs.build-image.outputs.image-remote }}
-      - run: docker run --rm ${{ needs.build-image.outputs.image-remote }} sonar-scanner -Dsonar.login=$SONAR_TOKEN
-
-  npm-audit:
-    needs: build-image
-    runs-on: ubuntu-latest
-    steps:
-      - run: docker pull ${{ needs.build-image.outputs.image-remote }}
-      - run: docker run --rm ${{ needs.build-image.outputs.image-remote }} npm audit --audit-level=moderate
-
-  deploy-vercel:
-    needs: build-image
-    runs-on: ubuntu-latest
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      SONAR_TOKEN:       ${{ secrets.SONAR_TOKEN }}
+      VERCEL_TOKEN:      ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID:     ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
-      - run: docker pull ${{ needs.build-image.outputs.image-remote }}
-      - run: docker run --rm ${{ needs.build-image.outputs.image-remote }} npx vercel --token $VERCEL_TOKEN --org-id $VERCEL_ORG_ID --project-id $VERCEL_PROJECT_ID --prod
+      - name: SonarCloud Scan
+        run: sonar-scanner -Dsonar.login=$SONAR_TOKEN
+
+      - name: NPM Audit
+        run: npm audit --audit-level=moderate
+
+      - name: Deploy to Vercel
+        run: npx vercel --token $VERCEL_TOKEN \
+                       --org-id $VERCEL_ORG_ID \
+                       --project-id $VERCEL_PROJECT_ID \
+                       --prod
