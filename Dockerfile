@@ -1,9 +1,19 @@
-FROM node:18-alpine
+FROM node:18-alpine AS base
 
 WORKDIR /usr/src/app
 
 COPY frontend/package*.json ./
-
 RUN npm ci
 
-CMD ["npm", "audit"]
+COPY frontend/. ./
+
+COPY sonar-project.properties ./
+
+FROM base AS dev
+
+EXPOSE 3000
+CMD ["npm", "start"]
+
+FROM base AS ci
+
+RUN npm install -g sonar-scanner vercel
