@@ -28,7 +28,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "audit:docker": "docker build -t frontend-audit . && docker run --rm frontend-audit",
+    "audit:ci": "npm audit --audit-level=moderate"
   },
   "eslintConfig": {
     "extends": [
