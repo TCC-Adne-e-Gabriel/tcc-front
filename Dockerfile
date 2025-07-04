@@ -1,8 +1,9 @@
 FROM node:20-alpine AS base
 
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+    build-base \
+    make \
+    g++
 
 USER app
 
