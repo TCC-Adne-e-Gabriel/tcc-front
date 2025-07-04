@@ -1,15 +1,24 @@
+export interface CategoryResponse {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Product {
   id: string;
   name: string;
-  price: number;
-  category: Category;
   description: string;
+  price: number;
+  sku: string;
+  quantity: number;
+  available: boolean;
   imageUrl?: string;
-  brand: string;
-  specs: Record<string, string>;
+  categories: CategoryResponse[];
+  created_at: string;
+  updated_at: string;
 }
-
-export type Category = 'HARDWARE' | 'GAMES' | 'SMARTPHONES' | 'FURNITURE' | 'SALE';
 
 export interface User {
   id: string;
