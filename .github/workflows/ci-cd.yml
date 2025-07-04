@@ -44,22 +44,14 @@ jobs:
         shell: bash
 
   build-and-push:
+    name: Build & Push Docker Image
     runs-on: ubuntu-latest
     needs: [npm-audit, sonarcloud]
-    outputs:
-      image-remote: ${{ steps.push.outputs.remote }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Build image
-        id: build
-        run: |
-          IMAGE_TAG=tcc-front:${{ github.sha }}
-          docker build -t $IMAGE_TAG .
-          echo "local=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: DockerHub Login
         uses: docker/login-action@v2
@@ -67,19 +59,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: DockerHub Push
-        id: push
-        run: |
-          REMOTE=${{ secrets.DOCKERHUB_USERNAME }}/tcc-front:${{ github.sha }}
-          docker tag ${{ steps.build.outputs.local }} $REMOTE
-          docker push $REMOTE
-          echo "remote=$REMOTE" >> $GITHUB_OUTPUT
+      - name: Build & Push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tcc-front:${{ github.sha }}
 
   vercel-deploy:
     name: Deploy to Vercel
     needs: build-and-push
     runs-on: ubuntu-latest
-    container: ${{ needs.build-and-push.outputs.image }}
     env:
       VERCEL_TOKEN:      ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID:     ${{ secrets.VERCEL_ORG_ID }}
