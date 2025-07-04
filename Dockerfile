@@ -1,9 +1,11 @@
 FROM node:20-alpine AS base
 
-RUN apk add --no-cache build-base make g++ && \
-    addgroup --gid 1001 --system app && \
-    adduser --no-create-home --shell /bin/false \
-    --disabled-password --uid 1001 --system --group app
+RUN apk add --no-cache \
+  build-base \
+  make \
+  g++
+
+RUN addgroup -S app && adduser -S -G app app
 
 USER app
 
