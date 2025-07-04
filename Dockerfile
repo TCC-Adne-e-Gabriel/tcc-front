@@ -12,9 +12,10 @@ USER app
 WORKDIR /usr/src/app
 
 COPY --chown=app:app package*.json ./
-RUN npm ci
+RUN npm install
 
 COPY --chown=app:app . ./
 
 EXPOSE 3000
+
 CMD ["npm", "start"]
