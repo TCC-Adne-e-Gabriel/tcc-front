@@ -1,20 +1,12 @@
-FROM node:20-alpine AS base
+FROM node:20
 
-RUN apk add --no-cache \
-  build-base \
-  make \
-  g++
+WORKDIR /app
 
-RUN addgroup -S app && adduser -S -G app app
+COPY frontend/package*.json ./
 
-USER app
+RUN npm ci
 
-WORKDIR /usr/src/app
-
-COPY --chown=app:app package*.json ./
-RUN npm install
-
-COPY --chown=app:app . ./
+COPY frontend/ .
 
 EXPOSE 3000
 
