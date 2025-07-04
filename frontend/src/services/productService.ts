@@ -1,5 +1,5 @@
 import { api } from './api';
-import { Product, CategoryResponse } from '../types';
+import { Product } from '../types';
 import { AxiosResponse } from 'axios';
 
 export const getProductById = async (id: string): Promise<Product> => {
@@ -12,27 +12,41 @@ export const getAllProducts = async (): Promise<Product[]> => {
   return response.data;
 };
 
-export const createProduct = async (data: Omit<Product, 'id' | 'categories' | 'created_at' | 'updated_at'> & { category_ids?: string[] }) => {
+export const createProduct = async (
+  data: Omit<Product, 'id' | 'categories' | 'created_at' | 'updated_at'> & { category_ids?: string[] }
+): Promise<Product> => {
   const response = await api.post<Product>('/product/', data);
   return response.data;
 };
 
-export const updateProductQuantity = async (id: string, quantity: number): Promise<Product> => {
+export const updateProductQuantity = async (
+  id: string,
+  quantity: number
+): Promise<Product> => {
   const response = await api.patch<Product>(`/product/${id}/`, { quantity });
   return response.data;
 };
 
-export const buyProduct = async (id: string, quantity: number): Promise<Product> => {
+export const buyProduct = async (
+  id: string,
+  quantity: number
+): Promise<Product> => {
   const response = await api.patch<Product>(`/product/buy/${id}/`, { quantity });
   return response.data;
 };
 
-export const associateCategory = async (productId: string, categoryId: string): Promise<Product> => {
+export const associateCategory = async (
+  productId: string,
+  categoryId: string
+): Promise<Product> => {
   const response = await api.post<Product>(`/product/associate-category/`, { product_id: productId, category_id: categoryId });
   return response.data;
 };
 
-export const disassociateCategory = async (productId: string, categoryId: string): Promise<Product> => {
+export const disassociateCategory = async (
+  productId: string,
+  categoryId: string
+): Promise<Product> => {
   const response = await api.post<Product>(`/product/desassociate-category/`, { product_id: productId, category_id: categoryId });
   return response.data;
 };
