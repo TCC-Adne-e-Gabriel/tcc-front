@@ -22,7 +22,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   
   npm-audit:
-    name: NPMAudit
+    name: NPM Audit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -49,22 +49,26 @@ jobs:
     outputs:
       image-remote: ${{ steps.push.outputs.remote }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - id: build
+      - name: Build image
+        id: build
         run: |
           IMAGE_TAG=tcc-front:${{ github.sha }}
           docker build -t $IMAGE_TAG .
           echo "local=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      - uses: docker/login-action@v2
+      - name: DockerHub Login
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - id: push
+      - name: DockerHub Push
+        id: push
         run: |
           REMOTE=${{ secrets.DOCKERHUB_USERNAME }}/tcc-front:${{ github.sha }}
           docker tag ${{ steps.build.outputs.local }} $REMOTE
@@ -72,7 +76,7 @@ jobs:
           echo "remote=$REMOTE" >> $GITHUB_OUTPUT
 
   vercel-deploy:
-    name: Deploy
+    name: Deploy to Vercel
     needs: build-and-push
     runs-on: ubuntu-latest
     container: ${{ needs.build-and-push.outputs.image }}
@@ -81,7 +85,13 @@ jobs:
       VERCEL_ORG_ID:     ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
-      - name: Deploy to Vercel
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Deploy
+        working-directory: frontend
         run: npx vercel --token $VERCEL_TOKEN \
                        --org-id $VERCEL_ORG_ID \
                        --project-id $VERCEL_PROJECT_ID \
