@@ -1,7 +1,7 @@
 import { api } from './api';
-import { PaymentCreateRequest, PaymentResponse } from '../types';
+import { CreatePaymentRequest, PaymentResponse } from '../types';
 
-export const createPayment = async (payload: PaymentCreateRequest): Promise<PaymentResponse> => {
+export const createPayment = async (payload: CreatePaymentRequest): Promise<PaymentResponse> => {
   const resp = await api.post<PaymentResponse>('/payment/', payload);
   return resp.data;
 };
