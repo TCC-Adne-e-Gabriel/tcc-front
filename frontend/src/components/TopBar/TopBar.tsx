@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { 
-  AppBar, 
-  Toolbar, 
-  Box, 
-  TextField, 
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  TextField,
   IconButton,
   InputAdornment,
   Link
@@ -29,71 +29,47 @@ const TopBar: React.FC = () => {
 
   return (
     <AppBar position="sticky">
-      <Toolbar>
-        <CategoryMenu />
-        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
-          <Link 
-            href="/" 
-            onClick={(e) => {
-              e.preventDefault();
-              navigate('/');
-            }}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              textDecoration: 'none'
-            }}
+      <Toolbar sx={{ display: 'flex', px: 2 }}>
+        <Box sx={{ width: '25%', display: 'flex', alignItems: 'center' }}>
+          <CategoryMenu />
+        </Box>
+
+        <Box sx={{ width: '50%', display: 'flex', justifyContent: 'center' }}>
+          <Link
+            component="button"
+            onClick={() => navigate('/')}
+            sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
           >
             <Box
               component="img"
               src={logo}
               alt="MORE OF THIS"
-              sx={{ 
-                height: { xs: 30, sm: 40 }, 
-                maxWidth: '100%',
-                minWidth: '10rem',
-                objectFit: 'contain'
-              }}
+              sx={{ height: { xs: 30, sm: 40 }, objectFit: 'contain', minWidth: '10rem' }}
             />
           </Link>
         </Box>
-        
-        <Box 
-          component="form" 
-          onSubmit={handleSearch}
-          sx={{ display: 'flex', alignItems: 'center' }}
-        >
-          <TextField
-            variant="outlined"
-            size="small"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton 
-                    type="submit" 
-                    aria-label="search"
-                    sx={{ 
-                      color: theme.palette.primary.main, 
-                      p: '8px' 
-                    }}
-                  >
-                    <Search />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-            sx={{ width: 250 }}
-          />
-          <IconButton 
-            sx={{ 
-              color: theme.palette.text.secondary, 
-              ml: 1 
-            }} 
-            onClick={() => navigate('/cart')}
-          >
+
+        <Box sx={{ width: '25%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 1 }}>
+          <Box component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'center' }}>
+            <TextField
+              variant="outlined"
+              size="small"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton type="submit" sx={{ color: theme.palette.primary.main, p: 1 }}>
+                      <Search />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+              sx={{ width: 200 }}
+            />
+          </Box>
+          <IconButton onClick={() => navigate('/cart')} sx={{ color: theme.palette.text.secondary }}>
             <ShoppingCart />
           </IconButton>
           <UserMenu />
