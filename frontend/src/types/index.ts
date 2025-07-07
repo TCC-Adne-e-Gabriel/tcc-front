@@ -55,3 +55,34 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface CreateOrderRequest {
+  freight: number;
+  products: { product_id: string; quantity: number }[];
+}
+
+export interface OrderResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  freight: number;
+  status: string;
+  products: {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    imageUrl?: string;
+  }[];
+}
+
+export interface CreatePaymentRequest {
+  payment_method: 'pix';
+  order_id: string;
+  total_amount: number;
+}
+
+export interface PaymentResponse {
+  id: string;
+  order_id: string;
+}

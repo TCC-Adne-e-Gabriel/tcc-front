@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Typography, Box, Paper, List, ListItemButton, ListItemText, CircularProgress } from '@mui/material';
-import { getMyOrders } from '../services/orderService';
-import { OrderResponse } from '../types';
+import { getMyOrders } from '../../services/orderService';
+import { OrderResponse } from '../../types';
 
 const OrdersPage: React.FC = () => {
   const [orders, setOrders] = useState<OrderResponse[]>([]);
