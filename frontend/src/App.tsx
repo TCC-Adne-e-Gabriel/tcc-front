@@ -8,6 +8,8 @@ import LoginPage from './pages/Auth/LoginPage';
 import SignupPage from './pages/Auth/SignupPage';
 import CartPage from './pages/Cart/CartPage';
 import ProductsPage from './pages/Products/ProductsPage';
+import OrderPage from './pages/Order/OrderPage';
+import PaymentPage from './pages/Payment/PaymentPage';
 import OrdersPage from './pages/Orders/OrdersPage';
 
 const App: React.FC = () => {
@@ -22,7 +24,9 @@ const App: React.FC = () => {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/products/:category" element={<ProductsPage />} />
               <Route path="/cart" element={<CartPage />} />
-              <Route path="/orders" element={<OrdersPage />} />
+              <Route path='/order' element={<OrderPage />} />
+              <Route path='/payment/:orderId' element={<PaymentPage />} />
+              <Route path='/orders' element={<OrdersPage />} />
             </Routes>
           </MainLayout>
         </CartProvider>
