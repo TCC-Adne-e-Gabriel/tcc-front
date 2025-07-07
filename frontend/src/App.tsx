@@ -19,18 +19,19 @@ const AppContent: React.FC = () => {
 
   return (
     <>
-      <MainLayout onCartClick={() => setCartOpen(true)} cartCount={totalItems} />
+      <MainLayout onCartClick={() => setCartOpen(true)} cartCount={totalItems}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/products/:category" element={<ProductsPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path='/order' element={<OrderPage />} />
+          <Route path='/payment/:orderId' element={<PaymentPage />} />
+          <Route path='/orders' element={<OrdersPage />} />
+        </Routes>
+      </MainLayout>
       <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/products/:category" element={<ProductsPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path='/order' element={<OrderPage />} />
-        <Route path='/payment/:orderId' element={<PaymentPage />} />
-        <Route path='/orders' element={<OrdersPage />} />
-      </Routes>
     </>
   );
 };
