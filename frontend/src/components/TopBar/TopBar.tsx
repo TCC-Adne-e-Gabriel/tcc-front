@@ -6,7 +6,8 @@ import {
   TextField,
   IconButton,
   InputAdornment,
-  Link
+  Link,
+  Badge
 } from '@mui/material';
 import { Search, ShoppingCart } from '@mui/icons-material';
 import CategoryMenu from './CategoryMenu';
@@ -15,7 +16,12 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import logo from '../../assets/images/logo_abbr.png';
 
-const TopBar: React.FC = () => {
+interface TopBarProps {
+  onCartClick: () => void;
+  cartCount: number;
+}
+
+const TopBar: React.FC<TopBarProps> = ({ onCartClick, cartCount }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
   const theme = useTheme();
@@ -69,8 +75,10 @@ const TopBar: React.FC = () => {
               sx={{ width: 200 }}
             />
           </Box>
-          <IconButton onClick={() => navigate('/cart')} sx={{ color: theme.palette.text.secondary }}>
-            <ShoppingCart />
+          <IconButton onClick={onCartClick} sx={{ color: theme.palette.text.secondary }}>
+            <Badge badgeContent={cartCount} color="primary">
+              <ShoppingCart />
+            </Badge>
           </IconButton>
           <UserMenu />
         </Box>

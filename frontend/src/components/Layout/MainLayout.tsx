@@ -4,11 +4,13 @@ import TopBar from '../TopBar/TopBar';
 
 interface MainLayoutProps {
   children: ReactNode;
+  onCartClick: () => void;
+  cartCount: number;
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children, onCartClick, cartCount }) => {
   const theme = useTheme();
-  
+
   return (
     <Box sx={{ 
       display: 'flex', 
@@ -16,7 +18,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       minHeight: '100vh',
       backgroundColor: theme.palette.background.default
     }}>
-      <TopBar/>
+      <TopBar onCartClick={onCartClick} cartCount={cartCount} />
       {children}
     </Box>
   );
