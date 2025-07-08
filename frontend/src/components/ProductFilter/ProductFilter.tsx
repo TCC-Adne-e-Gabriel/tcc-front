@@ -15,7 +15,7 @@ import { CategoryResponse, Product } from '../../types';
 interface FilterProps {
   products: Product[];
   categories: CategoryResponse[];
-  initialCategories: string[];  // from URL
+  initialCategories: string[];
   onFilterChange: (filtered: Product[]) => void;
 }
 
@@ -25,24 +25,19 @@ const ProductFilter: React.FC<FilterProps> = ({
   initialCategories,
   onFilterChange,
 }) => {
-  // compute price bounds
   const prices = products.map(p => p.price);
   const maxPrice = prices.length ? Math.max(...prices) : 0;
 
   const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice]);
   const [selectedCats, setSelectedCats] = useState<string[]>(initialCategories);
 
-  // update priceRange if product list changes
   useEffect(() => {
     setPriceRange([0, maxPrice]);
   }, [maxPrice]);
 
-  // run filter whenever inputs change
   useEffect(() => {
     const filtered = products.filter(p => {
-      // price in range
       const inPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
-      // category match if any selected, else true
       const inCat =
         !selectedCats.length ||
         p.categories.some(c => selectedCats.includes(c.name));

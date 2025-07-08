@@ -1,22 +1,76 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Container, Paper } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Paper,
+  Box,
+  Link as MuiLink,
+} from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { useAuth } from '../../contexts/AuthContext';
+import { useForm, FieldConfig } from '../../hooks/useForm';
+import ErrorSnackbar from '../../components/ErrorSnackbar/ErrorSnackbar';
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+
+const formConfig: Record<'name'|'email'|'password'|'confirmPassword', FieldConfig> = {
+  name: { initial: '', required: true },
+  email: {
+    initial: '',
+    required: true,
+    validators: [v => emailRegex.test(v) ? null : 'Enter a valid email address.'],
+  },
+  password: {
+    initial: '',
+    required: true,
+    validators: [
+      v => passwordRegex.test(v)
+        ? null
+        : 'Password must have at least 8 characters, include uppercase, lowercase & special characters.',
+    ],
+  },
+  confirmPassword: {
+    initial: '',
+    required: true,
+    validators: [
+      (v, all) => v === all!['password']
+        ? null
+        : 'Passwords do not match.',
+    ],
+  },
+};
 
 const SignupPage: React.FC = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const { register } = useAuth();
   const theme = useTheme();
+  const { register } = useAuth();
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const {
+    formValues,
+    formErrors,
+    handleInputChange,
+    handleInputBlur,
+    validateForm,
+  } = useForm(formConfig);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     try {
-      await register({ name, email, password, confirmPassword });
-    } catch (error) {
-      console.error('Registration failed:', error);
+      await register({
+        name: formValues.name,
+        email: formValues.email,
+        password: formValues.password,
+        confirmPassword: formValues.confirmPassword,
+      });
+    } catch (err: any) {
+      console.error('Registration failed:', err);
+      setApiError(`Registration failed, please try again: ${err.message}`);
     }
   };
 
@@ -26,59 +80,89 @@ const SignupPage: React.FC = () => {
         <Typography variant="h4" align="center" gutterBottom>
           Create Account
         </Typography>
-        <form onSubmit={handleSubmit}>
+        <Box component="form" noValidate onSubmit={handleSubmit}>
           <TextField
+            name="name"
             label="Name"
             fullWidth
             margin="normal"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
+            value={formValues.name}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            error={!!formErrors.name}
+            helperText={formErrors.name}
+            InputLabelProps={{ style: { color: theme.palette.text.primary } }}
           />
+
           <TextField
+            name="email"
             label="Email"
             type="email"
             fullWidth
             margin="normal"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            value={formValues.email}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            error={!!formErrors.email}
+            helperText={formErrors.email}
+            InputLabelProps={{ style: { color: theme.palette.text.primary } }}
           />
+
           <TextField
+            name="password"
             label="Password"
             type="password"
             fullWidth
             margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+            value={formValues.password}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            error={!!formErrors.password}
+            helperText={formErrors.password}
+            InputLabelProps={{ style: { color: theme.palette.text.primary } }}
           />
+
           <TextField
-            label="Confirm password"
+            name="confirmPassword"
+            label="Confirm Password"
             type="password"
             fullWidth
             margin="normal"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
+            value={formValues.confirmPassword}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            error={!!formErrors.confirmPassword}
+            helperText={formErrors.confirmPassword}
+            InputLabelProps={{ style: { color: theme.palette.text.primary } }}
           />
+
+          <Box sx={{ textAlign: 'center', mt: 3 }}>
+            <MuiLink
+              component={RouterLink}
+              to="/login"
+              sx={{ color: theme.palette.primary.main }}
+            >
+              Already have an account? Log in here.
+            </MuiLink>
+          </Box>
+
           <Button
             type="submit"
             variant="contained"
             fullWidth
-            sx={{ 
-              mt: 3,
+            sx={{
+              mt: 2,
               py: 1.5,
               backgroundColor: theme.palette.primary.main,
-              '&:hover': {
-                backgroundColor: theme.palette.primary.dark
-              }
+              '&:hover': { backgroundColor: theme.palette.primary.dark },
             }}
           >
             Sign Up
           </Button>
-        </form>
+        </Box>
       </Paper>
+
+      <ErrorSnackbar error={apiError} onClose={() => setApiError(null)} />
     </Container>
   );
 };
