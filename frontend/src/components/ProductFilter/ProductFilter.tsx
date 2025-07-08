@@ -1,60 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, Slider, Collapse, IconButton } from '@mui/material';
-import { ExpandMore, ExpandLess } from '@mui/icons-material';
-import { Product } from '../../types';
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Typography,
+  Slider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+} from '@mui/material';
+import { CategoryResponse, Product } from '../../types';
 
-interface ProductFilterProps {
+interface FilterProps {
   products: Product[];
+  categories: CategoryResponse[];
+  initialCategories: string[];  // from URL
   onFilterChange: (filtered: Product[]) => void;
-  currentCategory?: string;
 }
 
-const ProductFilter: React.FC<ProductFilterProps> = ({ products, onFilterChange, currentCategory }) => {
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
-  const [open, setOpen] = useState(true);
+const ProductFilter: React.FC<FilterProps> = ({
+  products,
+  categories,
+  initialCategories,
+  onFilterChange,
+}) => {
+  // compute price bounds
+  const prices = products.map(p => p.price);
+  const maxPrice = prices.length ? Math.max(...prices) : 0;
 
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice]);
+  const [selectedCats, setSelectedCats] = useState<string[]>(initialCategories);
+
+  // update priceRange if product list changes
   useEffect(() => {
-    if (products.length) {
-      const max = Math.max(...products.map(p => p.price));
-      setPriceRange([0, Math.ceil(max / 100) * 100]);
-    }
-  }, [products]);
+    setPriceRange([0, maxPrice]);
+  }, [maxPrice]);
 
+  // run filter whenever inputs change
   useEffect(() => {
-    let filtered = products.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
-
-    if (currentCategory) {
-      filtered = filtered.filter(p => p.categories.some(c => c.name === currentCategory));
-    }
-
+    const filtered = products.filter(p => {
+      // price in range
+      const inPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
+      // category match if any selected, else true
+      const inCat =
+        !selectedCats.length ||
+        p.categories.some(c => selectedCats.includes(c.name));
+      return inPrice && inCat;
+    });
     onFilterChange(filtered);
-  }, [priceRange, currentCategory, products, onFilterChange]);
+  }, [products, priceRange, selectedCats, onFilterChange]);
 
   return (
-    <Box sx={{ p: 2, bgcolor: '#fff', borderRadius: 2, boxShadow: 1 }}>
-      <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>Filters</Typography>
+    <Box sx={{ p: 2, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
+      <Typography variant="h6" sx={{ mb: 2 }}>Filters</Typography>
 
-      <Box sx={{ mb: 3 }}>
-        <Typography sx={{ mb: 1 }}>Price Range (${priceRange[0]} - ${priceRange[1]})</Typography>
-        <Slider
-          value={priceRange}
-          onChange={(_, v) => setPriceRange(v as [number, number])}
-          valueLabelDisplay="auto"
-          min={0}
-          max={priceRange[1] * 1.1}
-          sx={{ color: '#804188' }}
-        />
-      </Box>
+      <FormControl fullWidth sx={{ mb: 3 }}>
+        <InputLabel id="cat-filter-label">Categories</InputLabel>
+        <Select
+          labelId="cat-filter-label"
+          multiple
+          value={selectedCats}
+          label="Categories"
+          renderValue={vals => vals.join(', ')}
+          onChange={e => {
+            const vals = e.target.value as string[];
+            setSelectedCats(vals);
+          }}
+        >
+          {categories.map(cat => (
+            <MenuItem key={cat.id} value={cat.name}>
+              <Checkbox checked={selectedCats.includes(cat.name)} />
+              <ListItemText primary={cat.name.charAt(0) + cat.name.slice(1).toLowerCase()} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
-      <Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }} onClick={() => setOpen(o => !o)}>          
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Category</Typography>
-          <IconButton size="small">{open ? <ExpandLess /> : <ExpandMore />}</IconButton>
-        </Box>
-        <Collapse in={open}>
-          <Typography sx={{ mt: 1, pl: 1 }}>{currentCategory || 'All'}</Typography>
-        </Collapse>
-      </Box>
+      <Typography gutterBottom>
+        Price Range: R${priceRange[0].toFixed(2)} – R${priceRange[1].toFixed(2)}
+      </Typography>
+      <Slider
+        value={priceRange}
+        min={0}
+        max={maxPrice}
+        onChange={(_, v) => setPriceRange(v as [number, number])}
+        valueLabelDisplay="auto"
+      />
     </Box>
   );
 };

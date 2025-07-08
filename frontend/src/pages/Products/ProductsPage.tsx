@@ -1,68 +1,114 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Box, Container, Typography, CircularProgress } from '@mui/material';
+import {
+  Container,
+  Typography,
+  Box,
+  CircularProgress,
+} from '@mui/material';
+import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import ProductFilter from '../../components/ProductFilter/ProductFilter';
-import { Product } from '../../types';
+import Pagination from '../../components/Pagination/Pagination';
+import { Product, CategoryResponse } from '../../types';
 import { getAllProducts } from '../../services/productService';
+import { getAllCategories } from '../../services/categoryService';
+
+const PAGE_SIZE = 12;
 
 const ProductsPage: React.FC = () => {
-  const { category } = useParams<{ category?: string }>();
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [searchParams] = useSearchParams();
+  const initialCats = searchParams.get('categories')
+    ? searchParams.get('categories')!.split(',')
+    : [];
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const [filtered, setFiltered] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [page, setPage] = useState(1);
+  const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
+
   useEffect(() => {
-    const load = async () => {
+    (async () => {
       setLoading(true);
-      try {
-        const products = await getAllProducts();
-        setAllProducts(products);
-        setFiltered(products);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+      const [allProds, allCats] = await Promise.all([
+        getAllProducts(),
+        getAllCategories(),
+      ]);
+      setProducts(allProds);
+      setCategories(allCats);
+      setLoading(false);
+    })();
   }, []);
+
+  useEffect(() => {
+    setPage(1);
+  }, [filtered]);
 
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
-        <CircularProgress sx={{ color: '#804188' }} />
+        <CircularProgress />
       </Box>
     );
   }
 
-  const title = category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Products` : 'All Products';
+  const display = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>{title}</Typography>
+      <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
+        Products
+      </Typography>
+
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
-        <Box sx={{ width: { xs: '100%', md: '30%' }, pr: { md: 3 }, mb: { xs: 3, md: 0 } }}>
+        <Box
+          sx={{
+            width: { xs: '100%', md: '25%' },
+            pr: { md: 3 },
+            mb: { xs: 3, md: 0 },
+          }}
+        >
           <ProductFilter
-            products={allProducts}
+            products={products}
+            categories={categories}
+            initialCategories={initialCats}
             onFilterChange={setFiltered}
-            currentCategory={category?.toUpperCase()}
           />
         </Box>
-        <Box sx={{ width: { xs: '100%', md: '70%' } }}>
-          <Box sx={{
-            display: 'grid',
-            gridTemplateColumns: {
-              xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)'
-            },
-            gap: 3
-          }}>
-            {filtered.map(p => (
-              <Box key={p.id}>
-                <ProductCard product={p} />
+
+        <Box sx={{ width: { xs: '100%', md: '75%' } }}>
+          {display.length > 0 ? (
+            <>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: {
+                    xs: '1fr',
+                    sm: 'repeat(2, 1fr)',
+                    md: 'repeat(3, 1fr)',
+                    lg: 'repeat(4, 1fr)',
+                  },
+                  gap: 3,
+                }}
+              >
+                {display.map((p) => (
+                  <Box key={p.id}>
+                    <ProductCard product={p} />
+                  </Box>
+                ))}
               </Box>
-            ))}
-          </Box>
+
+              {pageCount > 1 && (
+                <Pagination page={page} count={pageCount} onChange={setPage} />
+              )}
+            </>
+          ) : (
+            <Typography variant="h6" sx={{ mt: 4, textAlign: 'center' }}>
+              No products available with the selected filters.
+            </Typography>
+          )}
         </Box>
       </Box>
     </Container>
