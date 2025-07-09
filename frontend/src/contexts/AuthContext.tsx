@@ -7,6 +7,7 @@ interface AuthContextType {
   login: (data: LoginData) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
+  updateUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType>(null!);
@@ -46,7 +47,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
-  const value = { user, login, register, logout };
+  const updateUser = (u: User) => setUser(u);
+
+  const value = { user, login, register, logout, updateUser };
 
   return (
     <AuthContext.Provider value={value}>
