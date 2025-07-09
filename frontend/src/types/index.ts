@@ -20,13 +20,6 @@ export interface Product {
   updated_at: string;
 }
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-}
-
 export interface CartItem {
   id: string;
   product: Product;
@@ -34,13 +27,25 @@ export interface CartItem {
   price: number;
 }
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface LoginData {
   email: string;
   password: string;
 }
 
-export interface RegisterData extends LoginData {
+export interface RegisterData {
   name: string;
+  email: string;
+  phone: string;
+  password: string;
   confirmPassword: string;
 }
 
