@@ -36,10 +36,7 @@ export interface User {
   updated_at: string;
 }
 
-export interface LoginData {
-  email: string;
-  password: string;
-}
+export interface LoginData { email: string; password: string; }
 
 export interface RegisterData {
   name: string;
@@ -47,6 +44,17 @@ export interface RegisterData {
   phone: string;
   password: string;
   confirmPassword: string;
+}
+
+export interface ProfileUpdateData {
+  name?: string;
+  email?: string;
+  phone?: string;
+}
+
+export interface ChangePasswordData {
+  currentPassword: string;
+  newPassword: string;
 }
 
 export type OrderStatus = 'PENDING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
