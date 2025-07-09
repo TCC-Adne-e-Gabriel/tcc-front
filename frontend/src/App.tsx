@@ -11,6 +11,9 @@ import PaymentPage from './pages/Payment/PaymentPage';
 import OrdersPage from './pages/Orders/OrdersPage';
 import LoginPage from './pages/Auth/LoginPage';
 import SignupPage from './pages/Auth/SignupPage';
+import ProfilePage from './pages/Profile/ProfilePage';
+import EditProfilePage from './pages/Profile/EditProfilePage';
+import ChangePasswordPage from './pages/Auth/ChangePasswordPage';
 import CartSidebar from './components/CartSidebar/CartSidebar';
 
 const AppContent: React.FC = () => {
@@ -29,6 +32,9 @@ const AppContent: React.FC = () => {
           <Route path="/payment/:orderId" element={<PaymentPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/edit" element={<EditProfilePage />} />
+          <Route path="/profile/change-password" element={<ChangePasswordPage />} />
         </Routes>
       </MainLayout>
       <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} />
