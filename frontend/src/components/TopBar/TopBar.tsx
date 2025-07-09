@@ -13,6 +13,7 @@ import { Search, ShoppingCart } from '@mui/icons-material';
 import CategoryMenu from './CategoryMenu';
 import UserMenu from './UserMenu';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '@mui/material/styles';
 import logo from '../../assets/images/logo_abbr.png';
 
@@ -24,6 +25,7 @@ interface TopBarProps {
 const TopBar: React.FC<TopBarProps> = ({ onCartClick, cartCount }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const { user } = useAuth();
   const theme = useTheme();
 
   const handleSearch = (e: React.FormEvent) => {
@@ -75,11 +77,13 @@ const TopBar: React.FC<TopBarProps> = ({ onCartClick, cartCount }) => {
               sx={{ width: 200 }}
             />
           </Box>
-          <IconButton onClick={onCartClick} sx={{ color: theme.palette.text.secondary }}>
-            <Badge badgeContent={cartCount} color="primary">
-              <ShoppingCart />
-            </Badge>
-          </IconButton>
+          {user && (
+            <IconButton onClick={onCartClick} sx={{ color: theme.palette.text.secondary }}>
+              <Badge badgeContent={cartCount} color="primary">
+                <ShoppingCart />
+              </Badge>
+            </IconButton>
+          )}
           <UserMenu />
         </Box>
       </Toolbar>
