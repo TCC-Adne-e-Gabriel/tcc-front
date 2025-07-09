@@ -16,13 +16,19 @@ import ErrorSnackbar from '../../components/ErrorSnackbar/ErrorSnackbar';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+const phoneRegex = /^[0-9]{10,}$/;
 
-const formConfig: Record<'name'|'email'|'password'|'confirmPassword', FieldConfig> = {
+const formConfig: Record<'name' | 'email' | 'phone' | 'password' | 'confirmPassword', FieldConfig> = {
   name: { initial: '', required: true },
   email: {
     initial: '',
     required: true,
     validators: [v => emailRegex.test(v) ? null : 'Enter a valid email address.'],
+  },
+  phone: {
+    initial: '',
+    required: true,
+    validators: [v => phoneRegex.test(v) ? null : 'Enter a valid phone number.'],
   },
   password: {
     initial: '',
@@ -65,6 +71,7 @@ const SignupPage: React.FC = () => {
       await register({
         name: formValues.name,
         email: formValues.email,
+        phone: formValues.phone,
         password: formValues.password,
         confirmPassword: formValues.confirmPassword,
       });
@@ -105,6 +112,19 @@ const SignupPage: React.FC = () => {
             onBlur={handleInputBlur}
             error={!!formErrors.email}
             helperText={formErrors.email}
+            InputLabelProps={{ style: { color: theme.palette.text.primary } }}
+          />
+
+          <TextField
+            name="phone"
+            label="Phone"
+            fullWidth
+            margin="normal"
+            value={formValues.phone}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            error={!!formErrors.phone}
+            helperText={formErrors.phone}
             InputLabelProps={{ style: { color: theme.palette.text.primary } }}
           />
 
