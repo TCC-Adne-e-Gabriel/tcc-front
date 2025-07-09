@@ -15,6 +15,7 @@ import ProfilePage from './pages/Profile/ProfilePage';
 import EditProfilePage from './pages/Profile/EditProfilePage';
 import ChangePasswordPage from './pages/Auth/ChangePasswordPage';
 import CartSidebar from './components/CartSidebar/CartSidebar';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 const AppContent: React.FC = () => {
   const [cartOpen, setCartOpen] = useState(false);
@@ -22,21 +23,22 @@ const AppContent: React.FC = () => {
 
   return (
     <>
-      <MainLayout onCartClick={() => setCartOpen(true)} cartCount={totalItems}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/product/:productId" element={<ProductDetailPage />} />
-          <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/order" element={<OrderPage />} />
-          <Route path="/payment/:orderId" element={<PaymentPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/profile/edit" element={<EditProfilePage />} />
-          <Route path="/profile/change-password" element={<ChangePasswordPage />} />
-        </Routes>
-      </MainLayout>
+      <Routes>
+        <Route element={<MainLayout onCartClick={() => setCartOpen(true)} cartCount={totalItems} />}>
+          <Route index element={<HomePage />} />
+          <Route path="products" element={<ProductsPage />} />
+          <Route path="product/:productId" element={<ProductDetailPage />} />
+          <Route path="orders" element={<OrdersPage />} />
+          <Route path="order" element={<OrderPage />} />
+          <Route path="payment/:orderId" element={<PaymentPage />} />
+          <Route path="signup" element={<SignupPage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile/edit" element={<EditProfilePage />} />
+          <Route path="profile/change-password" element={<ChangePasswordPage />} />
+        </Route>
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
       <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} />
     </>
   );
