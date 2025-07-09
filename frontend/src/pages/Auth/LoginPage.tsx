@@ -15,7 +15,6 @@ import { useForm, FieldConfig } from '../../hooks/useForm';
 import ErrorSnackbar from '../../components/ErrorSnackbar/ErrorSnackbar';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
 
 const formConfig: Record<'email'|'password', FieldConfig> = {
   email: {
@@ -28,11 +27,6 @@ const formConfig: Record<'email'|'password', FieldConfig> = {
   password: {
     initial: '',
     required: true,
-    validators: [
-      v => passwordRegex.test(v)
-        ? null
-        : 'Password must have at least 8 characters, include uppercase, lowercase & special characters.',
-    ],
   },
 };
 
