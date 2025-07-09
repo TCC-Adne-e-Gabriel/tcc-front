@@ -20,26 +20,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const userData = await getCurrentUser();
         setUser(userData);
-      } catch (error) {
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);
       }
     };
-    
     fetchUser();
   }, []);
 
   const login = async (data: LoginData) => {
-    const { user, token } = await apiLogin(data);
+    const token = await apiLogin(data);
     localStorage.setItem('token', token);
+    const user = await getCurrentUser();
     setUser(user);
   };
 
   const register = async (data: RegisterData) => {
-    const { user, token } = await apiRegister(data);
-    localStorage.setItem('token', token);
-    setUser(user);
+    await apiRegister(data);
+    await login({ email: data.email, password: data.password });
   };
 
   const logout = () => {

@@ -45,7 +45,6 @@ export function useForm<FieldNames extends string>(
 
     const validatorsToRun: ValidatorFn[] = [];
     if (required) {
-      const label =
       validatorsToRun.push((v) =>
         v ? null : 'This field is required.'
       );
