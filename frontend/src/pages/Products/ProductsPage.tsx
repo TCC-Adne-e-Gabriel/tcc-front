@@ -12,6 +12,7 @@ import Pagination from '../../components/Pagination/Pagination';
 import { Product, CategoryResponse } from '../../types';
 import { getAllProducts } from '../../services/productService';
 import { getAllCategories } from '../../services/categoryService';
+import ErrorSnackbar from '../../components/ErrorSnackbar/ErrorSnackbar';
 
 const PAGE_SIZE = 12;
 
@@ -25,6 +26,7 @@ const ProductsPage: React.FC = () => {
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const [filtered, setFiltered] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const [page, setPage] = useState(1);
   const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
@@ -32,13 +34,19 @@ const ProductsPage: React.FC = () => {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const [allProds, allCats] = await Promise.all([
-        getAllProducts(),
-        getAllCategories(),
-      ]);
-      setProducts(allProds);
-      setCategories(allCats);
-      setLoading(false);
+      try {
+        const [allProds, allCats] = await Promise.all([
+          getAllProducts(),
+          getAllCategories(),
+        ]);
+        setProducts(allProds);
+        setCategories(allCats);
+      } catch (err: any) {
+        console.error('Loading products failed:', err);
+        setApiError(`Loading products failed, please try again: ${err.message}`);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, []);
 
@@ -93,7 +101,7 @@ const ProductsPage: React.FC = () => {
                   gap: 3,
                 }}
               >
-                {display.map((p) => (
+                {display.map(p => (
                   <Box key={p.id}>
                     <ProductCard product={p} />
                   </Box>
@@ -111,6 +119,8 @@ const ProductsPage: React.FC = () => {
           )}
         </Box>
       </Box>
+
+      <ErrorSnackbar error={apiError} onClose={() => setApiError(null)} />
     </Container>
   );
 };
