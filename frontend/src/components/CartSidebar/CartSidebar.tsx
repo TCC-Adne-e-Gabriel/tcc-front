@@ -17,6 +17,7 @@ import { useCart } from '../../contexts/CartContext';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from 'react-router-dom';
 
 interface CartSidebarProps {
   open: boolean;
@@ -25,6 +26,7 @@ interface CartSidebarProps {
 
 const CartSidebar: React.FC<CartSidebarProps> = ({ open, onClose }) => {
   const { cart, updateItemQuantity, removeFromCart, clearCart } = useCart();
+  const navigate = useNavigate();
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -59,9 +61,23 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ open, onClose }) => {
           </List>
         )}
         <Divider sx={{ my: 2 }} />
-        <Typography variant="subtitle1">Subtotal: R${subtotal.toFixed(2)}</Typography>
-        <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={() => {/* proceed to checkout */}}>Checkout</Button>
-        <Button fullWidth variant="text" sx={{ mt: 1 }} onClick={clearCart}>Clear Cart</Button>
+         <Typography variant="subtitle1">
+           Subtotal: R${subtotal.toFixed(2)}
+         </Typography>
+        <Button
+          fullWidth
+          variant="contained"
+          sx={{ mt: 2 }}
+          onClick={() => {
+            onClose();
+            navigate('/order');
+          }}
+        >
+          Checkout
+        </Button>
+         <Button fullWidth variant="text" sx={{ mt: 1 }} onClick={clearCart}>
+           Clear Cart
+         </Button>
       </Box>
     </Drawer>
   );
