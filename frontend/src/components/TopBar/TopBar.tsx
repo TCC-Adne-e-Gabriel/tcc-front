@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+// src/components/TopBar/TopBar.tsx
+import React from 'react';
 import {
   AppBar,
   Toolbar,
   Box,
-  TextField,
   IconButton,
-  InputAdornment,
   Link,
-  Badge
+  Badge,
+  Typography,
 } from '@mui/material';
-import { Search, ShoppingCart } from '@mui/icons-material';
+import { ShoppingCart } from '@mui/icons-material';
 import CategoryMenu from './CategoryMenu';
 import UserMenu from './UserMenu';
 import { useNavigate } from 'react-router-dom';
@@ -23,17 +23,9 @@ interface TopBarProps {
 }
 
 const TopBar: React.FC<TopBarProps> = ({ onCartClick, cartCount }) => {
-  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
   const { user } = useAuth();
   const theme = useTheme();
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
-    }
-  };
 
   return (
     <AppBar position="sticky">
@@ -46,39 +38,50 @@ const TopBar: React.FC<TopBarProps> = ({ onCartClick, cartCount }) => {
           <Link
             component="button"
             onClick={() => navigate('/')}
-            sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
           >
             <Box
               component="img"
               src={logo}
               alt="MORE OF THIS"
-              sx={{ height: { xs: 30, sm: 40 }, objectFit: 'contain', minWidth: '10rem' }}
+              sx={{
+                height: { xs: 30, sm: 40 },
+                objectFit: 'contain',
+                minWidth: '10rem',
+              }}
             />
+            <Typography
+              variant="subtitle2"
+              sx={{
+                mt: 0.5,
+                fontFamily: theme.typography.fontFamily,
+                color: theme.palette.primary.contrastText,
+                lineHeight: 1,
+              }}
+            >
+              MORE OF THIS
+            </Typography>
           </Link>
         </Box>
 
-        <Box sx={{ width: '25%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 1 }}>
-          <Box component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'center' }}>
-            <TextField
-              variant="outlined"
-              size="small"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton type="submit" sx={{ color: theme.palette.primary.main, p: 1 }}>
-                      <Search />
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-              sx={{ width: 200 }}
-            />
-          </Box>
+        <Box
+          sx={{
+            width: '25%',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
           {user && (
-            <IconButton onClick={onCartClick} sx={{ color: theme.palette.text.secondary }}>
+            <IconButton
+              onClick={onCartClick}
+              sx={{ color: theme.palette.text.secondary }}
+            >
               <Badge badgeContent={cartCount} color="primary">
                 <ShoppingCart />
               </Badge>

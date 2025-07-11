@@ -1,37 +1,85 @@
-import React from 'react';
-import { Button, Typography, Container, Paper, Box, Link as MuiLink } from '@mui/material';
+import React, { useEffect } from 'react';
+import {
+  Container,
+  Paper,
+  Box,
+  Typography,
+  IconButton,
+  Link as MuiLink,
+  Button,
+  useTheme
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const theme = useTheme();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
 
   if (!user) {
-    navigate('/login');
     return null;
   }
 
   return (
     <Container maxWidth="sm" sx={{ mt: 8 }}>
       <Paper sx={{ p: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Your Profile
-        </Typography>
-        <Typography><strong>Name:</strong> {user.name}</Typography>
-        <Typography><strong>Email:</strong> {user.email}</Typography>
-        <Typography><strong>Phone:</strong> {user.phone}</Typography>
-        <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
-          <Button
-            variant="outlined"
-            startIcon={<span className="material-icons">edit</span>}
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+          <Typography variant="h4" sx={{ flexGrow: 1 }}>
+            Your Profile
+          </Typography>
+          <IconButton
+            aria-label="Edit Profile"
             onClick={() => navigate('/profile/edit')}
+            sx={{
+              color: theme.palette.primary.main,
+              '&:hover': { backgroundColor: theme.palette.primary.dark + '33' }
+            }}
           >
-            Edit Profile
-          </Button>
-          <MuiLink component={RouterLink} to="/profile/change-password" sx={{ alignSelf: 'center' }}>
+            <EditIcon />
+          </IconButton>
+        </Box>
+
+        <Box sx={{ mb: 2, '& > *:not(:first-of-type)': { mt: 2 } }}>
+          <Typography>
+            <strong>Name:</strong> {user.name}
+          </Typography>
+          <Typography>
+            <strong>Email:</strong> {user.email}
+          </Typography>
+          <Typography>
+            <strong>Phone Number:</strong> {user.phone}
+          </Typography>
+        </Box>
+
+        <Box sx={{ mb: 4 }}>
+          <MuiLink
+            component="button"
+            variant="body2"
+            onClick={() => navigate('/profile/change-password')}
+          >
             Change Password
           </MuiLink>
+        </Box>
+
+        <Box sx={{ textAlign: 'center' }}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => {
+              logout();
+              navigate('/');
+            }}
+          >
+            Log Out
+          </Button>
         </Box>
       </Paper>
     </Container>
