@@ -6,15 +6,22 @@ import {
   useTheme
 } from '@mui/material';
 import bgImage from '../../assets/images/home.jpg';
+import logo from '../../assets/images/logo_default.png';
 
 const HomePage: React.FC = () => {
   const theme = useTheme();
 
   return (
-    <Box>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+      }}
+    >
       <Box
         sx={{
-          height: '100vh',
+          flexGrow: 1,
           backgroundImage: `
             linear-gradient(
               to bottom,
@@ -43,27 +50,28 @@ const HomePage: React.FC = () => {
           },
         }}
       >
-        <Typography 
-          variant="h1" 
-          sx={{ 
-            zIndex: 1, 
-            fontWeight: 'bold',
-            mb: 3,
-            fontSize: { xs: '2.5rem', sm: '3rem', md: '4rem' }
+        <Box
+          component="img"
+          src={logo}
+          alt="MORE OF THIS"
+          sx={{
+            zIndex: 1,
+            mb: 4,
+            height: { xs: 150, sm: 200 },
+            objectFit: 'contain',
+            minWidth: '10rem',
           }}
-        >
-          Welcome to MOT Gaming
-        </Typography>
+        />
         <Typography 
           variant="h5" 
           sx={{ 
             zIndex: 1, 
             maxWidth: 800,
-            mb: 4,
+            mb: 6,
             px: 2
           }}
         >
-          Your ultimate destination for premium gaming gear and accessories
+          Your ultimate destination for gaming gear and accessories
         </Typography>
         <Button 
           variant="contained" 
@@ -81,6 +89,27 @@ const HomePage: React.FC = () => {
         >
           Shop Now
         </Button>
+        <Box
+          component="footer"
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            zIndex: 10,
+            py: 2,
+            width: '100%',
+            textAlign: 'center',
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: 'bold',
+            }}
+          >  
+            © 2025 Adne Moretti & Gabriel Moretti
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
