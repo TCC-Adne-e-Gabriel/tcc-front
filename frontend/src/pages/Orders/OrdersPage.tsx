@@ -39,7 +39,11 @@ const OrdersPage: React.FC = () => {
     return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}><CircularProgress /></Box>;
   }
   if (!orders.length) {
-    return <Typography sx={{ mt: 4, textAlign: 'center' }}>No orders yet.</Typography>;
+    return (
+      <Typography sx={{ mt: 4, textAlign: 'center' }}>
+        There are no orders yet.
+      </Typography>
+    );
   }
 
   return (

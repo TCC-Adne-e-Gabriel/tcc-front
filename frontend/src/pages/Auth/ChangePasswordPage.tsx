@@ -48,6 +48,7 @@ const ChangePasswordPage: React.FC = () => {
         onChange={handleInputChange} onBlur={handleInputBlur}
         error={!!formErrors.currentPassword}
         helperText={formErrors.currentPassword}
+        InputLabelProps={{ style: { color: theme.palette.text.primary } }}
       />
       <TextField
         name="newPassword" label="New Password" type="password"
@@ -56,6 +57,7 @@ const ChangePasswordPage: React.FC = () => {
         onChange={handleInputChange} onBlur={handleInputBlur}
         error={!!formErrors.newPassword}
         helperText={formErrors.newPassword}
+        InputLabelProps={{ style: { color: theme.palette.text.primary } }}
       />
 
       <Button

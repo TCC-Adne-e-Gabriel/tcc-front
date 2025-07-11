@@ -49,6 +49,7 @@ const EditProfilePage: React.FC = () => {
         value={formValues.name}
         onChange={handleInputChange} onBlur={handleInputBlur}
         error={!!formErrors.name} helperText={formErrors.name}
+        InputLabelProps={{ style: { color: theme.palette.text.primary } }}
       />
       <TextField
         name="email" label="Email"
@@ -56,6 +57,7 @@ const EditProfilePage: React.FC = () => {
         value={formValues.email}
         onChange={handleInputChange} onBlur={handleInputBlur}
         error={!!formErrors.email} helperText={formErrors.email}
+        InputLabelProps={{ style: { color: theme.palette.text.primary } }}
       />
       <TextField
         name="phone" label="Phone"
@@ -63,6 +65,7 @@ const EditProfilePage: React.FC = () => {
         value={formValues.phone}
         onChange={handleInputChange} onBlur={handleInputBlur}
         error={!!formErrors.phone} helperText={formErrors.phone}
+        InputLabelProps={{ style: { color: theme.palette.text.primary } }}
       />
 
       <Button

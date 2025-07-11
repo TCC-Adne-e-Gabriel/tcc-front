@@ -58,7 +58,7 @@ const PaymentPage: React.FC = () => {
     <Container sx={{ textAlign: 'center', py: 4 }}>
       <Typography variant="h4" gutterBottom>Pay Order</Typography>
       <Box sx={{ mb: 2 }}>
-        {/* QRCode */}
+        QRCode
         <Box sx={{ height: 200, bgcolor: 'grey.200', mb: 2 }} />
       </Box>
       <Button variant="contained" onClick={handleConfirm} disabled={loading}>

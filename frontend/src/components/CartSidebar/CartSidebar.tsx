@@ -66,6 +66,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ open, onClose }) => {
          </Typography>
         <Button
           fullWidth
+          disabled={cart.length === 0}
           variant="contained"
           sx={{ mt: 2 }}
           onClick={() => {

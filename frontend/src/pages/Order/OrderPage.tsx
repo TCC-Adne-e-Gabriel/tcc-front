@@ -43,7 +43,11 @@ const OrderPage: React.FC = () => {
   };
 
   if (!cart.length) {
-    return <Typography>Your cart is empty.</Typography>;
+    return (
+      <Typography sx={{ mt: 4, textAlign: 'center' }}>
+        Your cart is empty.
+      </Typography>
+    );
   }
 
   return (
