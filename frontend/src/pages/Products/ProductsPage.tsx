@@ -41,6 +41,7 @@ const ProductsPage: React.FC = () => {
         ]);
         setProducts(allProds);
         setCategories(allCats);
+        setFiltered(allProds);
       } catch (err: any) {
         console.error('Loading products failed:', err);
         setApiError(`Loading products failed, please try again: ${err.message}`);
@@ -50,10 +51,6 @@ const ProductsPage: React.FC = () => {
     })();
   }, []);
 
-  useEffect(() => {
-    setPage(1);
-  }, [filtered]);
-
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
@@ -62,14 +59,33 @@ const ProductsPage: React.FC = () => {
     );
   }
 
+  if (!products.length) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '60vh',
+          textAlign: 'center',
+          px: 2,
+        }}
+      >
+        <Typography variant="h3">
+          There are no products currently available.
+        </Typography>
+        <Typography variant="h5">
+          Please wait for more products to be added.
+        </Typography>
+      </Box>
+    );
+  }
+
   const display = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
-        Products
-      </Typography>
-
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
         <Box
           sx={{
