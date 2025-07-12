@@ -1,21 +1,23 @@
+export interface CategoryResponse {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Product {
   id: string;
   name: string;
-  price: number;
-  category: Category;
   description: string;
+  price: number;
+  sku: string;
+  quantity: number;
+  available: boolean;
   imageUrl?: string;
-  brand: string;
-  specs: Record<string, string>;
-}
-
-export type Category = 'HARDWARE' | 'GAMES' | 'SMARTPHONES' | 'FURNITURE' | 'SALE';
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: string;
+  categories: CategoryResponse[];
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CartItem {
@@ -25,14 +27,34 @@ export interface CartItem {
   price: number;
 }
 
-export interface LoginData {
+export interface User {
+  id: string;
+  name: string;
   email: string;
-  password: string;
+  phone: string;
+  created_at: string;
+  updated_at: string;
 }
 
-export interface RegisterData extends LoginData {
+export interface LoginData { email: string; password: string; }
+
+export interface RegisterData {
   name: string;
+  email: string;
+  phone: string;
+  password: string;
   confirmPassword: string;
+}
+
+export interface ProfileUpdateData {
+  name?: string;
+  email?: string;
+  phone?: string;
+}
+
+export interface ChangePasswordData {
+  currentPassword: string;
+  newPassword: string;
 }
 
 export type OrderStatus = 'PENDING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
@@ -45,4 +67,35 @@ export interface Order {
   status: OrderStatus;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface CreateOrderRequest {
+  freight: number;
+  products: { product_id: string; quantity: number }[];
+}
+
+export interface OrderResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  freight: number;
+  status: string;
+  products: {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    imageUrl?: string;
+  }[];
+}
+
+export interface CreatePaymentRequest {
+  payment_method: 'pix';
+  order_id: string;
+  total_amount: number;
+}
+
+export interface PaymentResponse {
+  id: string;
+  order_id: string;
 }

@@ -1,83 +1,46 @@
 import React, { useState } from 'react';
-import { IconButton, Menu, MenuItem, Avatar } from '@mui/material';
+import { IconButton, Menu, MenuItem } from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const UserMenu: React.FC = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null|HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    logout();
-    handleMenuClose();
-  };
-
   return (
-    <div>
-      <IconButton
-        onClick={handleMenuOpen}
-        size="small"
-        sx={{ ml: 2 }}
-        aria-controls={open ? 'account-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-      >
-        <Avatar sx={{ width: 32, height: 32, bgcolor: '#4D2D51' }}>
-          {user ? user.name.charAt(0) : 'U'}
-        </Avatar>
+    <>
+      <IconButton onClick={e => setAnchorEl(e.currentTarget)}>
+        <AccountCircleIcon fontSize="large" sx={{ color: 'white' }} />
       </IconButton>
       <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={open}
-        onClose={handleMenuClose}
-        onClick={handleMenuClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-            mt: 1.5,
-            '& .MuiAvatar-root': {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorEl={anchorEl} open={open}
+        onClose={() => setAnchorEl(null)}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
       >
-        {!!!user ? (
-          [
-            <MenuItem key="orders" onClick={() => (window.location.href = '/orders')}>
-              <Avatar /> Orders
-            </MenuItem>,
-            <MenuItem key="logout" onClick={handleLogout}>
-              <Avatar /> Logout
-            </MenuItem>,
-          ]
+        {user ? (
+          <>
+            <MenuItem onClick={() => { navigate('/profile'); setAnchorEl(null); }}>
+              Profile
+            </MenuItem>
+            <MenuItem onClick={() => { navigate('/orders'); setAnchorEl(null); }}>
+              Orders
+            </MenuItem>
+            <MenuItem onClick={() => { logout(); setAnchorEl(null); }}>
+              Logout
+            </MenuItem>
+          </>
         ) : (
-          [
-            <MenuItem key="login" onClick={() => (window.location.href = '/login')}>
-              <Avatar /> Login
-            </MenuItem>,
-            <MenuItem key="signup" onClick={() => (window.location.href = '/signup')}>
-              <Avatar /> Sign Up
-            </MenuItem>,
-          ]
+          <>
+            <MenuItem onClick={() => navigate('/login')}>Login</MenuItem>
+            <MenuItem onClick={() => navigate('/signup')}>Sign Up</MenuItem>
+          </>
         )}
       </Menu>
-    </div>
+    </>
   );
 };
 

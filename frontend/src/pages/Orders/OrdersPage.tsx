@@ -1,136 +1,67 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Container, 
-  Typography, 
-  Box, 
-  Paper, 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
-  TableRow,
-  Chip,
-  CircularProgress,
-  useTheme
+import {
+  Container,
+  Typography,
+  Box,
+  Paper,
+  List,
+  ListItemButton,
+  ListItemText,
+  CircularProgress
 } from '@mui/material';
-import { useAuth } from '../../contexts/AuthContext';
-import { Order, OrderStatus } from '../../types';
-import { getOrders } from '../../services/orderService';
+import { useNavigate } from 'react-router-dom';
+import { getMyOrders } from '../../services/orderService';
+import { OrderResponse } from '../../types';
+import ErrorSnackbar from '../../components/ErrorSnackbar/ErrorSnackbar';
 
 const OrdersPage: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<OrderResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
-  const theme = useTheme();
+  const [apiError, setApiError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      if (user) {
-        try {
-          setLoading(true);
-          const ordersData = await getOrders(user.id);
-          setOrders(ordersData);
-        } catch (error) {
-          console.error('Failed to fetch orders:', error);
-        } finally {
-          setLoading(false);
-        }
+    (async () => {
+      setLoading(true);
+      try {
+        const data = await getMyOrders();
+        setOrders(data);
+      } catch (err: any) {
+        console.error('Fetch orders failed:', err);
+        setApiError(`Fetching orders failed, please try again: ${err.message}`);
+      } finally {
+        setLoading(false);
       }
-    };
-
-    fetchOrders();
-  }, [user]);
-
-  const getStatusColor = (status: OrderStatus) => {
-    switch (status) {
-      case 'DELIVERED':
-        return 'success';
-      case 'SHIPPED':
-        return 'info';
-      case 'PENDING':
-        return 'warning';
-      case 'CANCELLED':
-        return 'error';
-      default:
-        return 'default';
-    }
-  };
-
-  if (!user) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4, textAlign: 'center' }}>
-        <Typography variant="h5" sx={{ mb: 2 }}>
-          Please sign in to view your orders
-        </Typography>
-      </Container>
-    );
-  }
+    })();
+  }, []);
 
   if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
-        <CircularProgress sx={{ color: theme.palette.primary.main }} />
-      </Box>
-    );
+    return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}><CircularProgress /></Box>;
   }
-
-  if (orders.length === 0) {
+  if (!orders.length) {
     return (
-      <Container maxWidth="lg" sx={{ py: 4, textAlign: 'center' }}>
-        <Typography variant="h5" sx={{ mb: 2 }}>
-          You have no orders yet
-        </Typography>
-        <Typography variant="body1" sx={{ mb: 3 }}>
-          Start shopping to see your orders here
-        </Typography>
-      </Container>
+      <Typography sx={{ mt: 4, textAlign: 'center' }}>
+        There are no orders yet.
+      </Typography>
     );
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
-        Your Orders
-      </Typography>
-      
-      <TableContainer component={Paper} sx={{ boxShadow: theme.shadows[1] }}>
-        <Table>
-          <TableHead sx={{ bgcolor: theme.palette.background.default }}>
-            <TableRow>
-              <TableCell sx={{ fontWeight: 'bold' }}>Order ID</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Date</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Items</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Total</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders.map((order) => (
-              <TableRow key={order.id} hover>
-                <TableCell>#{order.id.slice(0, 8)}</TableCell>
-                <TableCell>
-                  {new Date(order.createdAt).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  {order.items.length} item{order.items.length > 1 ? 's' : ''}
-                </TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>
-                  ${order.total.toFixed(2)}
-                </TableCell>
-                <TableCell>
-                  <Chip 
-                    label={order.status} 
-                    color={getStatusColor(order.status)}
-                    variant="outlined"
-                    size="small"
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <Container sx={{ py: 4 }}>
+      <Typography variant="h4" gutterBottom>Your Orders</Typography>
+      <Paper>
+        <List>
+          {orders.map(o => (
+            <ListItemButton key={o.id} onClick={() => navigate(`/order/${o.id}`)}>
+              <ListItemText
+                primary={`Order ${o.id.slice(0, 8)}`}
+                secondary={o.status}
+              />
+            </ListItemButton>
+          ))}
+        </List>
+      </Paper>
+      <ErrorSnackbar error={apiError} onClose={() => setApiError(null)} />
     </Container>
   );
 };

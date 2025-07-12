@@ -1,76 +1,142 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Box, Container, Typography, CircularProgress } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+  Container,
+  Typography,
+  Box,
+  CircularProgress,
+} from '@mui/material';
+import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import ProductFilter from '../../components/ProductFilter/ProductFilter';
-import { Product, Category } from '../../types';
-import { getProductsByCategory } from '../../services/productService';
+import Pagination from '../../components/Pagination/Pagination';
+import { Product, CategoryResponse } from '../../types';
+import { getAllProducts } from '../../services/productService';
+import { getAllCategories } from '../../services/categoryService';
+import ErrorSnackbar from '../../components/ErrorSnackbar/ErrorSnackbar';
+
+const PAGE_SIZE = 12;
 
 const ProductsPage: React.FC = () => {
-  const { category } = useParams<{ category: string }>();
+  const [searchParams] = useSearchParams();
+  const initialCats = searchParams.get('categories')
+    ? searchParams.get('categories')!.split(',')
+    : [];
+
   const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CategoryResponse[]>([]);
+  const [filtered, setFiltered] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const [page, setPage] = useState(1);
+  const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    (async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const data = await getProductsByCategory((category || '').toUpperCase() as Category);
-        setProducts(data);
-        setFilteredProducts(data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
+        const [allProds, allCats] = await Promise.all([
+          getAllProducts(),
+          getAllCategories(),
+        ]);
+        setProducts(allProds);
+        setCategories(allCats);
+        setFiltered(allProds);
+      } catch (err: any) {
+        console.error('Loading products failed:', err);
+        setApiError(`Loading products failed, please try again: ${err.message}`);
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchProducts();
-  }, [category]);
+    })();
+  }, []);
 
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
-        <CircularProgress sx={{ color: '#804188' }} />
+        <CircularProgress />
       </Box>
     );
   }
 
+  if (!products.length) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '60vh',
+          textAlign: 'center',
+          px: 2,
+        }}
+      >
+        <Typography variant="h3">
+          There are no products currently available.
+        </Typography>
+        <Typography variant="h5">
+          Please wait for more products to be added.
+        </Typography>
+      </Box>
+    );
+  }
+
+  const display = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
-        {category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Products` : 'All Products'}
-      </Typography>
-      
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
-        <Box sx={{ width: { xs: '100%', md: '30%' }, pr: { md: 3 }, mb: { xs: 3, md: 0 } }}>
-          <ProductFilter 
-            products={products} 
-            onFilterChange={setFilteredProducts}
-            currentCategory={category?.toUpperCase() as Category}
+        <Box
+          sx={{
+            width: { xs: '100%', md: '25%' },
+            pr: { md: 3 },
+            mb: { xs: 3, md: 0 },
+          }}
+        >
+          <ProductFilter
+            products={products}
+            categories={categories}
+            initialCategories={initialCats}
+            onFilterChange={setFiltered}
           />
         </Box>
 
-        <Box sx={{ width: { xs: '100%', md: '70%' } }}>
-          <Box sx={{
-            display: 'grid',
-            gridTemplateColumns: {
-              xs: '1fr',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(3, 1fr)',
-              lg: 'repeat(4, 1fr)'
-            },
-            gap: 3,
-          }}>
-            {filteredProducts.map(product => (
-              <Box key={product.id}>
-                <ProductCard product={product} />
+        <Box sx={{ width: { xs: '100%', md: '75%' } }}>
+          {display.length > 0 ? (
+            <>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: {
+                    xs: '1fr',
+                    sm: 'repeat(2, 1fr)',
+                    md: 'repeat(3, 1fr)',
+                    lg: 'repeat(4, 1fr)',
+                  },
+                  gap: 3,
+                }}
+              >
+                {display.map(p => (
+                  <Box key={p.id}>
+                    <ProductCard product={p} />
+                  </Box>
+                ))}
               </Box>
-            ))}
-          </Box>
+
+              {pageCount > 1 && (
+                <Pagination page={page} count={pageCount} onChange={setPage} />
+              )}
+            </>
+          ) : (
+            <Typography variant="h6" sx={{ mt: 4, textAlign: 'center' }}>
+              No products available with the selected filters.
+            </Typography>
+          )}
         </Box>
       </Box>
+
+      <ErrorSnackbar error={apiError} onClose={() => setApiError(null)} />
     </Container>
   );
 };
