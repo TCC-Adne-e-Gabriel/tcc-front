@@ -1,8 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import * as jwtDecodeModule from 'jwt-decode';
-const jwtDecode = (jwtDecodeModule as any).default as <T>(token: string) => T;
-
-
+import { jwtDecode } from 'jwt-decode';
 import { login as apiLogin, register as apiRegister, getCurrentUser } from '../services/authService';
 import type { LoginData, RegisterData, User } from '../types';
 
