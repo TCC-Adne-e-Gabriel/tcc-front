@@ -16,8 +16,8 @@ const SERVICE_CONFIG = {
 };
 
 const getBaseUrl = (serviceKey: keyof typeof SERVICE_CONFIG): string => {
-  if (process.env.PROJECT_API_BASE_URL) {
-    return process.env.PROJECT_API_BASE_URL;
+  if (process.env.REACT_APP_API_BASE_URL) {
+    return process.env.REACT_APP_API_BASE_URL;
   }
 
   const serviceConfig = SERVICE_CONFIG[serviceKey];
