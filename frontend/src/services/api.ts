@@ -1,29 +1,42 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
-const API_BASE_URL = process.env.PROJECT_API_BASE_URL || 'http://localhost:8000';
+const SERVICE_PORTS: Record<string, number> = {
+  auth: 8001,
+  catalog: 8002,
+  order: 8003,
+};
 
-export const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json'
+const getBaseUrl = (serviceKey: string): string => {
+  if (process.env.PROJECT_API_BASE_URL) {
+    return process.env.PROJECT_API_BASE_URL;
   }
-});
+  return `http://localhost:${SERVICE_PORTS[serviceKey]}`;
+};
 
-api.interceptors.request.use(config => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+export const createApiInstance = (serviceKey: string): AxiosInstance => {
+  const instance = axios.create({
+    baseURL: getBaseUrl(serviceKey),
+    headers: { 'Content-Type': 'application/json' }
+  });
 
-api.interceptors.response.use(
-  response => response,
-  error => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+  instance.interceptors.request.use(config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    return Promise.reject(error);
-  }
-);
+    return config;
+  });
+
+  instance.interceptors.response.use(
+    response => response,
+    error => {
+      if (error.response?.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  return instance;
+};
