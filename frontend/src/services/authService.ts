@@ -1,5 +1,7 @@
-import { api } from './api';
+import { createApiInstance } from './api';
 import { User, LoginData, RegisterData, ProfileUpdateData, ChangePasswordData } from '../types';
+
+const api = createApiInstance('auth');
 
 export const login = async (data: LoginData): Promise<string> => {
   const params = new URLSearchParams();
