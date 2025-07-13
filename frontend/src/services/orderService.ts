@@ -1,5 +1,7 @@
-import { api } from './api';
-import { Order, OrderResponse, CreateOrderRequest } from '../types';
+import { createApiInstance } from './api';
+import { OrderResponse, CreateOrderRequest } from '../types';
+
+const api = createApiInstance('order');
 
 export const getMyOrders = async (): Promise<OrderResponse[]> => {
   const resp = await api.get<OrderResponse[]>('/order/me/');
