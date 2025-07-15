@@ -8,7 +8,9 @@ import {
   ListItem,
   ListItemText,
   Divider,
-  CircularProgress
+  CircularProgress,
+  Paper,
+  useTheme
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../contexts/CartContext';
@@ -17,6 +19,7 @@ import { CreateOrderRequest } from '../../types';
 import ErrorSnackbar from '../../components/ErrorSnackbar/ErrorSnackbar';
 
 const OrderPage: React.FC = () => {
+  const theme = useTheme();
   const { cart, clearCart } = useCart();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -51,32 +54,66 @@ const OrderPage: React.FC = () => {
   }
 
   return (
-    <Container sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>
+    <Container sx={{ py: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
         Your Order
       </Typography>
-      <List>
-        {cart.map(item => (
-          <ListItem key={item.id}>
-            <ListItemText
-              primary={item.product.name}
-              secondary={`${item.quantity} x R$${item.price.toFixed(2)}`}
-            />
-          </ListItem>
-        ))}
-      </List>
-      <Divider sx={{ my: 2 }} />
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography variant="h6">Total:</Typography>
-        <Typography variant="h6">R${total.toFixed(2)}</Typography>
+      
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: { xs: 'column', md: 'row' }, 
+        gap: 4, 
+        width: '100%',
+        maxWidth: 800
+      }}>
+        <Paper sx={{ 
+          p: 3, 
+          flex: 1,
+          boxShadow: theme.shadows[3],
+          borderRadius: theme.shape.borderRadius,
+        }}>
+          <List>
+            {cart.map(item => (
+              <ListItem key={item.id}>
+                <ListItemText
+                  primary={item.product.name}
+                  secondary={
+                    <span style={{ color: theme.palette.primary.main }}>
+                      {item.quantity} x R${item.price.toFixed(2)}
+                    </span>
+                  }
+                />
+              </ListItem>
+            ))}
+          </List>
+          <Divider sx={{ my: 2 }} />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+            <Typography variant="h6">Total:</Typography>
+            <Typography variant="h6">R${total.toFixed(2)}</Typography>
+          </Box>
+        </Paper>
+        
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          justifyContent: 'flex-start',
+          width: { xs: '100%', md: 'auto' }
+        }}>
+          <Button
+            variant="contained"
+            onClick={handleProceed}
+            disabled={loading}
+            sx={{ 
+              minWidth: 200,
+              height: 56,
+              alignSelf: { xs: 'center', md: 'flex-start' }
+            }}
+          >
+            {loading ? <CircularProgress size={24} /> : 'Proceed to Payment'}
+          </Button>
+        </Box>
       </Box>
-      <Button
-        variant="contained"
-        onClick={handleProceed}
-        disabled={loading}
-      >
-        {loading ? <CircularProgress size={24} /> : 'Proceed to Payment'}
-      </Button>
+      
       <ErrorSnackbar error={apiError} onClose={() => setApiError(null)} />
     </Container>
   );
