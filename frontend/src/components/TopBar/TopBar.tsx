@@ -28,12 +28,22 @@ const TopBar: React.FC<TopBarProps> = ({ onCartClick, cartCount }) => {
 
   return (
     <AppBar position="sticky">
-      <Toolbar sx={{ display: 'flex', px: 2 }}>
-        <Box sx={{ width: '25%', display: 'flex', alignItems: 'center' }}>
+      <Toolbar sx={{ position: 'relative', px: 2, minHeight: 64 }}>
+        <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
           <CategoryMenu />
         </Box>
 
-        <Box sx={{ width: '50%', display: 'flex', justifyContent: 'center' }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
           <Link
             component="button"
             onClick={() => navigate('/')}
@@ -47,11 +57,7 @@ const TopBar: React.FC<TopBarProps> = ({ onCartClick, cartCount }) => {
               component="img"
               src={logo}
               alt="MORE OF THIS"
-              sx={{
-                height: { xs: 30, sm: 40 },
-                objectFit: 'contain',
-                minWidth: '10rem',
-              }}
+              sx={{ height: { xs: 30, sm: 40 }, objectFit: 'contain' }}
             />
             <Typography
               variant="subtitle2"
@@ -67,15 +73,7 @@ const TopBar: React.FC<TopBarProps> = ({ onCartClick, cartCount }) => {
           </Link>
         </Box>
 
-        <Box
-          sx={{
-            width: '25%',
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            gap: 1,
-          }}
-        >
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 1 }}>
           {user && (
             <IconButton
               onClick={onCartClick}
