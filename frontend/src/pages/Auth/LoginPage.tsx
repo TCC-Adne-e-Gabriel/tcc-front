@@ -8,7 +8,7 @@ import {
   Box,
   Link as MuiLink,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { useAuth } from '../../contexts/AuthContext';
 import { useForm, FieldConfig } from '../../hooks/useForm';
@@ -32,6 +32,7 @@ const formConfig: Record<'email'|'password', FieldConfig> = {
 
 const LoginPage: React.FC = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const { login } = useAuth();
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -52,6 +53,7 @@ const LoginPage: React.FC = () => {
         email: formValues.email,
         password: formValues.password,
       });
+      navigate('/');
     } catch (err: any) {
       console.error('Login failed:', err);
       setApiError(`Login failed, please try again: ${err.message}`);

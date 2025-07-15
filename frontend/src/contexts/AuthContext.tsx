@@ -19,10 +19,19 @@ interface AuthContextType {
   updateUser: (user: User) => void;
 }
 
+const MOCK_USER: User = {
+  id: '1',
+  name: 'Gabriel Moretti',
+  email: 'test@example.com',
+  phone: '61912345678',
+  created_at: '',
+  updated_at: '',
+};
+
 const AuthContext = createContext<AuthContextType>(null!);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(MOCK_USER);
   const [role, setRole] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 

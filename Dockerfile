@@ -1,10 +1,15 @@
 FROM node:20
 
-WORKDIR /app
-
 COPY frontend/package*.json ./
 
 RUN npm ci
+  && addgroup --gid 1001 --system app && \
+  adduser --no-create-home --shell /bin/false
+    --disabled-password --uid 1001 --system --group app
+
+USER app
+
+WORKDIR /app
 
 COPY frontend/ .
 

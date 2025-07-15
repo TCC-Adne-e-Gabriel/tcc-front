@@ -8,7 +8,7 @@ import {
   Box,
   Link as MuiLink,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { useAuth } from '../../contexts/AuthContext';
 import { useForm, FieldConfig } from '../../hooks/useForm';
@@ -52,6 +52,8 @@ const formConfig: Record<'name' | 'email' | 'phone' | 'password' | 'confirmPassw
 
 const SignupPage: React.FC = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  
   const { register } = useAuth();
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -75,6 +77,7 @@ const SignupPage: React.FC = () => {
         password: formValues.password,
         confirmPassword: formValues.confirmPassword,
       });
+      navigate('/login');
     } catch (err: any) {
       console.error('Registration failed:', err);
       setApiError(`Registration failed, please try again: ${err.message}`);

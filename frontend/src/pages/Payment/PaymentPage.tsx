@@ -55,11 +55,11 @@ const PaymentPage: React.FC = () => {
   }
 
   return (
-    <Container sx={{ textAlign: 'center', py: 4 }}>
+    <Container sx={{ textAlign: 'center', justifyItems: 'center', py: 4 }}>
       <Typography variant="h4" gutterBottom>Pay Order</Typography>
       <Box sx={{ mb: 2 }}>
-        QRCode
-        <Box sx={{ height: 200, bgcolor: 'grey.200', mb: 2 }} />
+        <Typography variant="body2" gutterBottom>(Pay with QRCode)</Typography>
+        <Box sx={{ height: 500, width: 500, bgcolor: '#ffffff', mb: 4, mt: 4 }} />
       </Box>
       <Button variant="contained" onClick={handleConfirm} disabled={loading}>
         {loading ? <CircularProgress size={24} /> : 'I have completed my payment'}

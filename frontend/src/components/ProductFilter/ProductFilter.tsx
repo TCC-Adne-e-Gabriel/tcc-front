@@ -9,6 +9,7 @@ import {
   Button,
   IconButton,
   Divider,
+  useTheme,
 } from '@mui/material';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import { CategoryResponse, Product } from '../../types';
@@ -26,6 +27,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
   initialCategories,
   onFilterChange,
 }) => {
+  const theme = useTheme();
   const prices = products.map((p) => p.price);
   const maxPrice = prices.length ? Math.max(...prices) : 0;
 
@@ -62,6 +64,14 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
     setSelectedCategories((prev) =>
       prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name]
     );
+
+  const toggleAll = () => {
+    if (selectedCategories.length === categories.length) {
+      setSelectedCategories([]);
+    } else {
+      setSelectedCategories(categories.map((c) => c.name));
+    }
+  };
 
   return (
     <Box
@@ -106,31 +116,47 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
           {categoriesOpen ? <ExpandLess /> : <ExpandMore />}
         </IconButton>
       </Box>
+
       {categoriesOpen && (
         <Box sx={{ mb: 2, pl: 1 }}>
           {categories.length ? (
-            categories.map((cat) => (
-              <Box
-                key={cat.id}
-                sx={{ display: 'flex', alignItems: 'center', py: 0.5 }}
+            <>
+              <Button
+                size="small"
+                onClick={toggleAll}
+                sx={{ mb: 1, ml: 1, textTransform: 'none', color: theme.palette.primary.main }}
               >
-                <Checkbox
-                  size="small"
-                  checked={selectedCategories.includes(cat.name)}
-                  onChange={() => toggleCategory(cat.name)}
-                />
-                <ListItemText
-                  primary={cat.name[0].toUpperCase() + cat.name.slice(1).toLowerCase()}
-                />
-              </Box>
-            ))
+                All
+              </Button>
+              {categories.map((cat) => (
+                <Box
+                  key={cat.id}
+                  sx={{ display: 'flex', alignItems: 'center', py: 0.5 }}
+                >
+                  <Checkbox
+                    size="small"
+                    sx={{
+                      color: theme.palette.primary.main,
+                      '&.Mui-checked': { color: theme.palette.primary.main },
+                      '&:hover': { backgroundColor: 'transparent' },
+                    }}
+                    checked={selectedCategories.includes(cat.name)}
+                    onChange={() => toggleCategory(cat.name)}
+                  />
+                  <ListItemText
+                    primary={
+                      cat.name[0].toUpperCase() + cat.name.slice(1).toLowerCase()
+                    }
+                  />
+                </Box>
+              ))}
+            </>
           ) : (
-            <Typography align="center">
-              No available categories.
-            </Typography>
+            <Typography align="center">No available categories.</Typography>
           )}
         </Box>
       )}
+
       <Divider sx={{ mb: 2 }} />
 
       <Typography variant="subtitle1" gutterBottom>

@@ -5,7 +5,10 @@ import {
   Box,
   Button,
   CircularProgress,
-  TextField
+  TextField,
+  Paper,
+  Chip,
+  Divider
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { getProductById } from '../../services/productService';
@@ -43,43 +46,92 @@ const ProductDetailPage: React.FC = () => {
 
   return (
     <Container sx={{ py: 4 }}>
-      <Box sx={{ display: 'flex', gap: 4, flexDirection: { xs: 'column', md: 'row' } }}>
-        <Box
-          component="img"
-          src={product.imageUrl}
-          alt={product.name}
-          sx={{ width: { xs: '100%', md: 400 }, objectFit: 'contain' }}
-        />
-        <Box sx={{ flex: 1 }}>
-          <Typography variant="h4" sx={{ mb: 2 }}>
-            {product.name}
-          </Typography>
-          <Typography variant="h5" sx={{ mb: 2 }}>
-            R$ {product.price.toFixed(2)}
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {product.description}
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 2 }}>
-            <TextField
-              type="number"
-              label="Quantity"
-              value={qty}
-              onChange={e => setQty(Math.max(1, Number(e.target.value)))}
-              size="small"
-              sx={{ width: 100 }}
-            />
-            <Button
-              variant="contained"
-              onClick={() => addToCart(product, qty)}
-            >
-              Add to Cart
-            </Button>
+      <Paper sx={{ p: 4 }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 4, 
+          flexDirection: { xs: 'column', md: 'row' },
+          height: '100%'
+        }}>
+          <Box
+            component="img"
+            src={product.imageUrl}
+            alt={product.name}
+            sx={{ 
+              width: { xs: '100%', md: 400 }, 
+              objectFit: 'contain',
+              alignSelf: 'flex-start'
+            }}
+          />
+          
+          <Box sx={{ 
+            flex: 1, 
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%'
+          }}>
+            {product.categories.some(c => c.name.toLowerCase() === 'sale') && (
+              <Chip 
+                label="SALE" 
+                color="error" 
+                size="small" 
+                sx={{ 
+                  position: 'absolute', 
+                  top: 0, 
+                  right: 0,
+                  fontWeight: 'bold',
+                  zIndex: 1
+                }} 
+              />
+            )}
+
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h4" sx={{ mb: 2, pr: 4 }}>
+                {product.name}
+              </Typography>
+              <Typography variant="h5" sx={{ mb: 2 }}>
+                R$ {product.price.toFixed(2)}
+              </Typography>
+              <Typography variant="body1">
+                {product.description}
+              </Typography>
+            </Box>
+            
+            <Divider sx={{ mb: 'auto' }}/>
+
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column',
+              flexGrow: 1,
+              gap: 2,
+              pt: 3,
+              borderTop: '1px solid rgba(0, 0, 0, 0.12)'
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Typography variant="h6">Quantity:</Typography>
+                <TextField
+                  type="number"
+                  value={qty}
+                  onChange={e => setQty(Math.max(1, Number(e.target.value)))}
+                  size="small"
+                  sx={{ width: 100 }}
+                  InputProps={{ inputProps: { min: 1 } }}
+                />
+                <Button
+                  variant="contained"
+                  onClick={() => addToCart(product, qty)}
+                  sx={{ width: '100%', ml: 4 }}
+                >
+                  Add to Cart
+                </Button>
+              </Box>
+            </Box>
           </Box>
         </Box>
-      </Box>
 
-      <ErrorSnackbar error={apiError} onClose={() => setApiError(null)} />
+        <ErrorSnackbar error={apiError} onClose={() => setApiError(null)} />
+      </Paper>
     </Container>
   );
 };
