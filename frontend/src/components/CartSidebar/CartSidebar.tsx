@@ -10,7 +10,8 @@ import {
   Avatar,
   ListItemText,
   Button,
-  Divider
+  Divider,
+  useTheme
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useCart } from '../../contexts/CartContext';
@@ -27,6 +28,7 @@ interface CartSidebarProps {
 const CartSidebar: React.FC<CartSidebarProps> = ({ open, onClose }) => {
   const { cart, updateItemQuantity, removeFromCart, clearCart } = useCart();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -55,7 +57,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ open, onClose }) => {
                   <Typography sx={{ mx: 1 }}>{item.quantity}</Typography>
                   <IconButton onClick={() => updateItemQuantity(item.id, item.quantity + 1)} size="small"><AddIcon /></IconButton>
                 </Box>
-                <IconButton onClick={() => removeFromCart(item.id)}><DeleteIcon /></IconButton>
+                <IconButton onClick={() => removeFromCart(item.id)} sx={{ color: theme.palette.primary.main }}><DeleteIcon /></IconButton>
               </ListItem>
             ))}
           </List>
