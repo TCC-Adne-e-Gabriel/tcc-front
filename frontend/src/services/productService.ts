@@ -5,7 +5,7 @@ import { AxiosResponse } from 'axios';
 const api = createApiInstance('catalog');
 
 export const getProductById = async (id: string): Promise<Product> => {
-  const response: AxiosResponse<Product> = await api.get(`/product/${id}/`);
+  const response: AxiosResponse<Product> = await api.get(`/product/${id}`);
   return response.data;
 };
 
@@ -25,7 +25,7 @@ export const updateProductQuantity = async (
   id: string,
   quantity: number
 ): Promise<Product> => {
-  const response = await api.patch<Product>(`/product/${id}/`, { quantity });
+  const response = await api.patch<Product>(`/product/${id}`, { quantity });
   return response.data;
 };
 
@@ -33,7 +33,7 @@ export const buyProduct = async (
   id: string,
   quantity: number
 ): Promise<Product> => {
-  const response = await api.patch<Product>(`/product/buy/${id}/`, { quantity });
+  const response = await api.patch<Product>(`/product/buy/${id}`, { quantity });
   return response.data;
 };
 
@@ -41,7 +41,7 @@ export const associateCategory = async (
   productId: string,
   categoryId: string
 ): Promise<Product> => {
-  const response = await api.post<Product>(`/product/associate-category/`, { product_id: productId, category_id: categoryId });
+  const response = await api.post<Product>(`/product/associate-category`, { product_id: productId, category_id: categoryId });
   return response.data;
 };
 
@@ -49,7 +49,7 @@ export const disassociateCategory = async (
   productId: string,
   categoryId: string
 ): Promise<Product> => {
-  const response = await api.post<Product>(`/product/desassociate-category/`, { product_id: productId, category_id: categoryId });
+  const response = await api.post<Product>(`/product/desassociate-category`, { product_id: productId, category_id: categoryId });
   return response.data;
 };
 
