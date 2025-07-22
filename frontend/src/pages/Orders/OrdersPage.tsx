@@ -191,13 +191,13 @@ const OrdersPage: React.FC = () => {
                       
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
                         <Typography>Shipping:</Typography>
-                        <Typography>R$ {order.freight.toFixed(2)}</Typography>
+                        <Typography>R$ {order.freight}</Typography>
                       </Box>
                       
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
                         <Typography variant="subtitle1" fontWeight="bold">Total:</Typography>
                         <Typography variant="subtitle1" fontWeight="bold">
-                          R$ {total.toFixed(2)}
+                          R$ {total}
                         </Typography>
                       </Box>
                     </Box>
