@@ -5,7 +5,7 @@ import { AxiosResponse } from 'axios';
 const api = createApiInstance('catalog');
 
 export const getProductById = async (id: string): Promise<Product> => {
-  const response: AxiosResponse<Product> = await api.get(`/product/${id}`);
+  const response: AxiosResponse<Product> = await api.get(`/product/${id}/`);
   return response.data;
 };
 
