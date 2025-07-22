@@ -1,5 +1,6 @@
 import { createApiInstance } from './api';
 import { User, LoginData, RegisterData, ProfileUpdateData, ChangePasswordData } from '../types';
+import { AxiosResponse } from 'axios';
 
 const api = createApiInstance('auth');
 
@@ -29,7 +30,7 @@ export const getCurrentUser = async (): Promise<User> => {
 };
 
 export const updateProfile = async (data: ProfileUpdateData): Promise<User> => {
-  const response = await api.patch('/customer/me/', data);
+  const response: AxiosResponse<User> = await api.patch('/customer/me/', data);
   return response.data;
 };
 

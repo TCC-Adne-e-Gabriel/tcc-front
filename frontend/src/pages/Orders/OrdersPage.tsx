@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { OrderResponse } from '../../types';
+import { getMyOrders } from '../../services/orderService';
 import ErrorSnackbar from '../../components/ErrorSnackbar/ErrorSnackbar';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -30,12 +31,26 @@ const OrdersPage: React.FC = () => {
   const navigate = useNavigate();
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
 
-  const handleToggleOrder = (orderId: string) => {
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const data = await getMyOrders();
+        setOrders(data);
+      } catch (err: any) {
+        console.error(err);
+        setApiError(err.message || 'Failed to fetch orders');
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const handleToggleOrder = (orderId: string) =>
     setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
-  };
 
   const getStatusColor = (status: string) => {
-    switch(status) {
+    switch (status) {
       case 'PAID': return 'success';
       case 'PENDING': return 'warning';
       case 'CANCELLED': return 'error';
@@ -45,15 +60,14 @@ const OrdersPage: React.FC = () => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
     });
-  };
 
   const calculateTotal = (order: OrderResponse) => {
     return order.products.reduce(
@@ -70,7 +84,7 @@ const OrdersPage: React.FC = () => {
     return (
       <Container sx={{ py: 4, textAlign: 'center' }}>
         <Typography variant="h5" sx={{ mt: 4 }}>
-          There are no orders yet.
+          You have no orders yet.
         </Typography>
         <Button 
           variant="outlined" 
